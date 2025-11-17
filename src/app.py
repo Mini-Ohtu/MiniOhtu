@@ -18,6 +18,7 @@ def save():
         "year": request.form.get("year"),
         "publisher": request.form.get("publisher")
     }
+    # TODO: finish saving to database
 
 
 @app.route("/new_book")
