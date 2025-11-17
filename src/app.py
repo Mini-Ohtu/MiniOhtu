@@ -18,7 +18,6 @@ def save():
         "year": request.form.get("year"),
         "publisher": request.form.get("publisher")
     }
-    print(new_book)
 
 
 @app.route("/new_book")
