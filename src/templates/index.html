@@ -6,12 +6,32 @@ Todo app
 
 {% block body %}
 
-<h2>Todo app</h2>
+<h2>ABC</h2>
 
-<div>
-  things still unfinished: {{ unfinished }}
-</div>
+<form action="/save" method="POST">
 
+  <div>
+  <label for="author">Author</label>
+  <input type="text" name="author" >
+  </div>
+
+  <div>
+  <label for="title">Title</label>
+  <input type="text" name="title">
+  </div>
+
+  <div>
+  <label for="year">Year</label>
+  <input type="text" name="year">
+  </div>
+  <div>
+  <label for="publisher">Publisher</label>
+  <input type="text" name="publisher">
+  </div>
+  <button type="submit">
+    Tallenna
+  </button>
+</form>
 <ul>
   {% for todo in todos %}
     <li style="display: flex">
