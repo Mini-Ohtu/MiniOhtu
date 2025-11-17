@@ -10,9 +10,20 @@ def index():
     unfinished = len([todo for todo in todos if not todo.done])
     return render_template("index.html", todos=todos, unfinished=unfinished) 
 
-@app.route("/new_todo")
+@app.route("/create_book", methods=["POST"])
+def save():
+    new_book = {
+        "author": request.form.get("author"),
+        "title": request.form.get("title"),
+        "year": request.form.get("year"),
+        "publisher": request.form.get("publisher")
+    }
+    print(new_book)
+
+
+@app.route("/new_book")
 def new():
-    return render_template("new_todo.html")
+    return render_template("new_book.html")
 
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
