@@ -6,10 +6,10 @@ Todo app
 
 {% block body %}
 
-<h2>ABC</h2>
+<h2>Todo app</h2>
 
 <div>
-  <a href="/new_book">Create new book</a>
+  things still unfinished: {{ unfinished }}
 </div>
 
 <ul>
@@ -27,10 +27,8 @@ Todo app
   {% endfor %}
 </ul>
 
-<!--
 <div>
   <a href="/new_todo">Create new todo</a>
 </div>
--->
 
 {% endblock %}
