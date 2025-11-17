@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+<!--
+{% block title %}
+Create a new todo
+{% endblock %}
+-->
+
+{% block body %}
+
+<h2>Create a new book</h2>
+
+<form action="/save" method="POST">
+
+  <div style="display: flex;">
+    <label for="author" style="width: 70px;">Author</label>
+    <input type="text" name="author" >
+  </div>
+
+  <div style="display: flex;">
+    <label for="title" style="width: 70px;">Title</label>
+    <input type="text" name="title">
+  </div>
+
+  <div style="display: flex;">
+    <label for="year" style="width: 70px;">Year</label>
+    <input type="text" name="year">
+  </div>
+
+  <div style="display: flex;">
+    <label for="publisher" style="width: 70px;">Publisher</label>
+    <input type="text" name="publisher">
+  </div>
+
+  <button type="submit">
+    Save
+  </button>
+</form>
+
+<!--
+<form action="/create_todo" method="post">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  <label for="content">Todo:</label>
+  <input type="text" name="content">
+  <br>
+  <button type="submit">
+    Create
+  </button>
+</form>
+
+{% endblock %}
+-->
