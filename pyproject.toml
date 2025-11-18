@@ -20,7 +20,9 @@ dependencies = [
 dev = [
     "robotframework (>=7.3.2,<8.0.0)",
     "robotframework-seleniumlibrary (>=6.8.0,<7.0.0)",
-    "pytest (>=8.4.2,<9.0.0)"
+    "pytest (>=8.4.2,<9.0.0)",
+    "pylint (>=4.0.3,<5.0.0)",
+    "autopep8 (>=2.3.2,<3.0.0)"
 ]
 
 [tool.poetry]
