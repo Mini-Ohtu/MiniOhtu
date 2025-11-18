@@ -12,7 +12,7 @@ repos:
       name: run test coverage
       entry: bash
       language: system
-      stages: [push]
+      stages: [pre-push]
       pass_filenames: false
       args:
         - -c
