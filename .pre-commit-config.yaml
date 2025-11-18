@@ -7,3 +7,15 @@ repos:
       language: system
       types: [python]
       require_serial: true
+
+    - id: coverage
+      name: run test coverage
+      entry: bash
+      language: system
+      stages: [push]
+      pass_filenames: false
+      args:
+        - -c
+        - |
+          coverage run -m pytest
+          coverage report
