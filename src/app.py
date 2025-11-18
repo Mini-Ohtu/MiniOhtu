@@ -1,6 +1,7 @@
 from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
 from repositories.todo_repository import get_todos, create_todo, set_done
+from repositories.reference_repository import create_references
 from config import app, test_env
 from util import validate_todo
 
@@ -18,6 +19,7 @@ def save():
         "publisher": request.form.get("publisher")
     }
     # TODO: finish saving to database
+    create_references(new_book["author"], new_book["title"], new_book["year"], new_book["publisher"])
 
 @app.route("/new_book")
 def new_book():
