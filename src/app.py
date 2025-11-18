@@ -8,7 +8,25 @@ from util import validate_todo
 def index():
     todos = get_todos()
     unfinished = len([todo for todo in todos if not todo.done])
-    return render_template("index.html", todos=todos, unfinished=unfinished) 
+    return render_template("index.html", todos=todos, unfinished=unfinished)
+
+@app.route("/references")
+def references():
+    return render_template("references.html")
+
+@app.route("/create_book", methods=["POST"])
+def save():
+    new_book = {
+        "author": request.form.get("author"),
+        "title": request.form.get("title"),
+        "year": request.form.get("year"),
+        "publisher": request.form.get("publisher")
+    }
+    # TODO: finish saving to database
+
+@app.route("/new_book")
+def new_book():
+    return render_template("new_book.html")
 
 @app.route("/new_todo")
 def new():

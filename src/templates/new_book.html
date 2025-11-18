@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<h2>Create a new book</h2>
+
+<form action="/save" method="POST">
+
+  <div style="display: flex;">
+    <label for="author" style="width: 70px;">Author</label>
+    <input type="text" name="author" >
+  </div>
+
+  <div style="display: flex;">
+    <label for="title" style="width: 70px;">Title</label>
+    <input type="text" name="title">
+  </div>
+
+  <div style="display: flex;">
+    <label for="year" style="width: 70px;">Year</label>
+    <input type="text" name="year">
+  </div>
+
+  <div style="display: flex;">
+    <label for="publisher" style="width: 70px;">Publisher</label>
+    <input type="text" name="publisher">
+  </div>
+
+  <button type="submit">
+    Save
+  </button>
+</form>
+
+{% endblock %}
