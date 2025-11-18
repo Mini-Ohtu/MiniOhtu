@@ -16,7 +16,7 @@ def get_references():
 def create_references(author, title, year, publisher):
     """Viitteiden luominen tietokantaan"""
     sql = text("INSERT INTO references (author, title, year, publisher) VALUES (:author, :title, :year, :publisher)")
-    db.session.execute(sql, { 
+    db.session.execute(sql, {
         "author": author,
         "title": title,
         "year": year,
