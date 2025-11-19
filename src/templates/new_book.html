@@ -32,4 +32,12 @@
   </button>
 </form>
 
+{% if book_created %}
+  <p style="margin-top: 1rem; color: green;">Book added</p>
+{% endif %}
+
+{% if error_message %}
+  <p style="margin-top: 1rem; color: red;">{{ error_message }}</p>
+{% endif %}
+
 {% endblock %}

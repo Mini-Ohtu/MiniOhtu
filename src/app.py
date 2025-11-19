@@ -1,8 +1,9 @@
-from flask import redirect, render_template, request, jsonify, flash
+from flask import redirect, render_template, request, jsonify, url_for
 from db_helper import reset_db
 from repositories.reference_repository import get_references, create_references
 from config import app, test_env
 from util import validate_reference_title, validate_reference_year
+from urllib.parse import urlencode
 
 @app.route("/")
 def index():
@@ -11,7 +12,9 @@ def index():
 
 @app.route("/new_book")
 def new():
-    return render_template("new_book.html")
+    created = request.args.get("created") == "true"
+    error_message = request.args.get("error")
+    return render_template("new_book.html", book_created=created, error_message=error_message)
 
 @app.route("/create_references", methods=["POST"])
 def reference_creation():
@@ -25,11 +28,11 @@ def reference_creation():
         year_value = validate_reference_year(year)
 
         create_references(author, title, year_value, publisher)
-        return redirect("/")
+        return redirect(url_for("new", created="true"))
     
     except Exception as error:
-        flash(str(error))
-        return  redirect("/new_book")
+        query = urlencode({"error": str(error)})
+        return redirect(f"{url_for('new')}?{query}")
 
 # testausta varten oleva reitti
 if test_env:

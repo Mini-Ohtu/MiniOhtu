@@ -2,6 +2,13 @@
 
 echo "Running tests"
 
+if [ -f ".env.test" ]; then
+  set -a
+  source .env.test
+  set +a
+  echo "Loaded .env.test for local DB"
+fi
+
 # luodaan tietokanta
 poetry run python src/db_helper.py
 
