@@ -22,9 +22,9 @@ def reference_creation():
 
     try:
         validate_reference_title(title)
-        validate_reference_year(year)
+        year_value = validate_reference_year(year)
 
-        create_references(author, title, year, publisher)
+        create_references(author, title, year_value, publisher)
         return redirect("/")
     
     except Exception as error:
