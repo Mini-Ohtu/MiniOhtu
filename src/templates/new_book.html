@@ -8,6 +8,11 @@
 <form action="/create_references" method="POST">
 
   <div style="display: flex;">
+    <label for="citekey" style="width: 70px;">CiteKey</label>
+    <input type="text" name="citekey" >
+  </div>
+
+  <div style="display: flex;">
     <label for="author" style="width: 70px;">Author</label>
     <input type="text" name="author" >
   </div>
@@ -31,6 +36,7 @@
     Save
   </button>
 </form>
+<a href="/">Back</a>
 
 {% if book_created %}
   <p style="margin-top: 1rem; color: green;">Book added</p>

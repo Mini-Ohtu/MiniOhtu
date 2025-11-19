@@ -11,4 +11,16 @@ Reference app
 <div>
   <a href="/new_book">Create new book</a>
 </div>
+
+<pre>
+{% for ref in references %}
+@book{ {{ ref.citekey }},
+  author = { {{ ref.author }} },
+  title  = { {{ ref.title }} },
+  year   = { {{ ref.year }} },
+  publisher = { {{ ref.publisher }} }
+}
+
+{% endfor %}
+</pre>
 {% endblock %}

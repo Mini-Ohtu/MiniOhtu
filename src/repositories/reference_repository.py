@@ -5,18 +5,19 @@ from entities.reference import Reference
 
 def get_references():
     """ Viitteiden haku, huomioi if-vaihtoehto jos ei viitteitä löydy tietokannasta """
-    result = db.session.execute(text("SELECT author, title, year, publisher FROM book_references"))
+    result = db.session.execute(text("SELECT citekey, author, title, year, publisher FROM book_references"))
     references = result.fetchall()
 
     if not references:
         return "Ei viitteitä"
     
-    return [Reference(reference[0], reference[1], reference[2], reference[3]) for reference in references] 
+    return [Reference(reference[0], reference[1], reference[2], reference[3], reference[4]) for reference in references] 
 
-def create_references(author, title, year, publisher):
+def create_references(citekey, author, title, year, publisher):
     """Viitteiden luominen tietokantaan"""
-    sql = text("INSERT INTO book_references (author, title, year, publisher) VALUES (:author, :title, :year, :publisher)")
+    sql = text("INSERT INTO book_references (citekey, author, title, year, publisher) VALUES (:citekey, :author, :title, :year, :publisher)")
     db.session.execute(sql, {
+        "citekey": citekey,
         "author": author,
         "title": title,
         "year": year,
