@@ -18,6 +18,7 @@ def new():
 
 @app.route("/create_references", methods=["POST"])
 def reference_creation():
+    citekey = request.form.get("citekey")
     author = request.form.get("author")
     title = request.form.get("title")
     year = request.form.get("year")
@@ -27,7 +28,7 @@ def reference_creation():
         validate_reference_title(title)
         year_value = validate_reference_year(year)
 
-        create_references(author, title, year_value, publisher)
+        create_references(citekey, author, title, year_value, publisher)
         return redirect(url_for("new", created="true"))
     
     except Exception as error:
