@@ -2,30 +2,26 @@
 Resource  resource.robot
 Suite Setup      Open And Configure Browser
 Suite Teardown   Close Browser
-Test Setup       Reset Todos
+Test Setup       Reset Database
 
 *** Test Cases ***
-At start there are no todos
-    Go To  ${HOME_URL}
-    Title Should Be  Todo app
-    Page Should Contain  things still unfinished: 0
 
-After adding a todo, there is one
+After adding a book show confirmation
     Go To  ${HOME_URL}
-    Click Link  Create new todo
-    Input Text  content  Buy milk
-    Click Button  Create
-    Page Should Contain  things still unfinished: 1
-    Page Should Contain  Buy milk
+    Click Link  Create new book
+    Input Text  author  Test Author
+    Input Text  title  Test Title
+    Input Text  year  2024
+    Input Text  publisher  Test Publisher
+    Click Button  Save
+    Wait Until Page Contains  Book added
 
-After adding two todos and marking one done, there is one unfinished
+Invalid year shows an error
     Go To  ${HOME_URL}
-    Click Link  Create new todo
-    Input Text  content  Buy milk
-    Click Button  Create
-    Click Link  Create new todo
-    Input Text  content  Clean house
-    Click Button  Create
-    Click Button  //li[div[contains(text(), 'Buy milk')]]/form/button
-    Page Should Contain  things still unfinished: 1
-    Page Should Contain  Buy milk, done
+    Click Link  Create new book
+    Input Text  author  Bad Year Author
+    Input Text  title  Bad Year Title
+    Input Text  year  not-a-year
+    Input Text  publisher  Bad Pub
+    Click Button  Save
+    Wait Until Page Contains  Year must be an integer

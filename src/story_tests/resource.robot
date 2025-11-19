@@ -26,6 +26,6 @@ Open And Configure Browser
     END
     Open Browser  browser=${BROWSER}  options=${options}
 
-Reset Todos
+Reset Database
     Go To  ${RESET_URL}
 
