@@ -12,6 +12,11 @@ Reference app
   <a href="/new_book">Create new book</a>
 </div>
 
+{% if references is string %}
+  <p>{{ references }}</p>
+
+{% else %}
+
 <pre>
 {% for ref in references %}
 @book{ {{ ref.citekey }},
@@ -23,4 +28,5 @@ Reference app
 
 {% endfor %}
 </pre>
+{% endif %}
 {% endblock %}
