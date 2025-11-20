@@ -1,6 +1,6 @@
 import unittest
-from src import util
-
+# pylint: disable=R0402
+import src.util as util
 
 class TestUtil(unittest.TestCase):
     def test_empty_title(self):
