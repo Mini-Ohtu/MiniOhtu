@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: poetry install        
       - name: Run unit tests
-        run: poetry run pytest src/tests
+        run: poetry run pytest
       - name: Setup chromedriver
         uses: nanasess/setup-chromedriver@eae6eb94d93f8f2997d2287d8499cbf3751e300f
       - run: |
