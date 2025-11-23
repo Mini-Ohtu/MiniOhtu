@@ -7,3 +7,5 @@ output.xml
 report.html
 *.png
 possu.sh
+.env.test
+.coverage
