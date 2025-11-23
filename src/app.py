@@ -41,6 +41,24 @@ def reference_creation():
         query = urlencode({"error": str(error)})
         return redirect(f"{url_for('new')}?{query}")
 
+@app.route("/edit_reference", methods=["POST"])
+def edit_reference():
+    citekey = request.form.get("citekey")
+    author = request.form.get("author")
+    title = request.form.get("title")
+    year = request.form.get("year")
+    publisher = request.form.get("publisher")
+
+    try:
+        validate_reference_title(title)
+        year_value = validate_reference_year(year)
+        # Updatea ei vielä ole toteutettu, eroaa uuden luomisesta, sillä ei synny uutta id:tä
+        update_reference(citekey, author, title, year_value, publisher)
+        return redirect(url_for("index", reference_updated="true"))
+  
+    except Exception as error:
+        query = urlencode({"error": str(error)})
+        return redirect(f"{url_for('edit_reference')}?{query}")
 
 # testausta varten oleva reitti
 if test_env:
