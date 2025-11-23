@@ -49,17 +49,19 @@ def edit_reference():
     year = request.form.get("year")
     publisher = request.form.get("publisher")
 
-    try:
-        validate_reference_title(title)
-        year_value = validate_reference_year(year)
-        # Updatea ei vielä ole toteutettu, eroaa uuden luomisesta, sillä ei synny uutta id:tä
-        update_reference(citekey, author, title, year_value, publisher)
-        return redirect(url_for("index", reference_updated="true"))
-  
-    except Exception as error:
-        query = urlencode({"error": str(error)})
-        return redirect(f"{url_for('edit_reference')}?{query}")
-      
+    #laitettu kommentteihin, kunnes lopullinen toteutus
+    #try:
+        # validate_reference_title(title)
+        # validate_reference_year(year)
+        # Huom. updatea ei vielä ole toteutettu
+        # update_reference(citekey, author, title, year_value, publisher)
+        # return redirect(url_for("index", reference_updated="true"))
+
+    # except Exception as error:
+        # query = urlencode({"error": str(error)})
+        # viite = get_reference(citekey)
+        # return render_template("edit_reference.html", viite=viite, error_message=query)
+
 @app.route("/delete_reference/<key>", methods=["POST"])
 def reference_deletion(key):
     print(key)
