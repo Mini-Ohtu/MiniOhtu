@@ -25,8 +25,11 @@ Reference app
   year   = { {{ ref.year }} },
   publisher = { {{ ref.publisher }} }
 }
-
-{% endfor %}
 </pre>
+<form method="POST" action="/delete_reference/{{ ref.citekey }}">
+<button type="submit">Delete</button>
+</form>
+<button onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+{% endfor %}
 {% endif %}
 {% endblock %}
