@@ -3,12 +3,13 @@ class Reference:
 
     # pylint: disable=R0913
     # pylint: disable=R0917
-    def __init__(self, citekey, author, title, year: int, publisher):
+    def __init__(self, citekey, author, title, year: int, publisher, entry_type="book"):
         self.citekey = citekey
         self.author = author
         self.title = title
         self.year = year
         self.publisher = publisher
+        self.entry_type = entry_type
 
     def __str__(self):
         return f"{self.citekey}, {self.author}, {self.title}, {self.year}, {self.publisher}"
