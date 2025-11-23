@@ -49,5 +49,4 @@ def delete_reference(citekey):
         },
     )
     db.session.commit()
-
     
