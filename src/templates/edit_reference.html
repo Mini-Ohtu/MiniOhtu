@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<h2>Edit reference: {{ viite.citekey }}</h2>
+
+<form action="/edit_reference" method="POST">
+
+  <div style="display: flex;">
+    <label for="citekey" style="width: 70px;">CiteKey</label>
+    <input type="text" name="citekey" value="{{ viite.citekey }}" >
+  </div>
+
+  <div style="display: flex;">
+    <label for="author" style="width: 70px;">Author</label>
+    <input type="text" name="author" value="{{ viite.author }}">
+  </div>
+
+  <div style="display: flex;">
+    <label for="title" style="width: 70px;">Title</label>
+    <input type="text" name="title" value="{{ viite.title }}">
+  </div>
+
+  <div style="display: flex;">
+    <label for="year" style="width: 70px;">Year</label>
+    <input type="text" name="year" value="{{ viite.year }}">
+  </div>
+
+  <div style="display: flex;">
+    <label for="publisher" style="width: 70px;">Publisher</label>
+    <input type="text" name="publisher" value="{{ viite.publisher }}">
+  </div>
+
+  <button type="submit">
+    Save changes
+  </button>
+</form>
+<a href="/">Back</a>
+
+{% if book_updated %}
+  <p style="margin-top: 1rem; color: green;">Reference updated</p>
+{% endif %}
+
+{% if error_message %}
+  <p style="margin-top: 1rem; color: red;">{{ error_message }}</p>
+{% endif %}
+
+{% endblock %}
