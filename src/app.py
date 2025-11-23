@@ -59,6 +59,13 @@ def edit_reference():
     except Exception as error:
         query = urlencode({"error": str(error)})
         return redirect(f"{url_for('edit_reference')}?{query}")
+      
+@app.route("/delete_reference/<key>", methods=["POST"])
+def reference_deletion(key):
+    print(key)
+    print("reference will be deleted")
+    # delete_reference(key)
+    return redirect("/")
 
 # testausta varten oleva reitti
 if test_env:
