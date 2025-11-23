@@ -46,6 +46,7 @@ def reference_deletion(key):
     delete_reference(key)
     return redirect("/")
 
+
 # testausta varten oleva reitti
 if test_env:
 
