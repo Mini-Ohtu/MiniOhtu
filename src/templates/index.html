@@ -9,7 +9,7 @@ Reference app
 <h2>Reference App</h2>
 
 <div>
-  <a href="/new_book">Create new book</a>
+  <a href="{{ url_for('new') }}">Create new reference</a>
 </div>
 
 {% if references is string %}
@@ -20,11 +20,10 @@ Reference app
 {% for ref in references %}
 <div class="d-flex align-items-start gap-3">
   <pre>
-  @book{ {{ ref.citekey }},
-    author = { {{ ref.author }} },
-    title  = { {{ ref.title }} },
-    year   = { {{ ref.year }} },
-    publisher = { {{ ref.publisher }} }
+  @{{ ref.entry_type }}{ {{ ref.citekey }},
+{% for field, value in ref.data.items() %}
+    {{ field }} = { {{ value }} }{% if not loop.last %},{% endif %}
+{% endfor %}
   }
   </pre>
 
