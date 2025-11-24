@@ -3,7 +3,33 @@ from flask import redirect, render_template, request, jsonify, url_for
 from db_helper import reset_db
 from repositories.reference_repository import get_references, create_references
 from config import app, test_env
-from util import validate_reference_title, validate_reference_year
+from util import (
+    validate_reference_title,
+    validate_reference_year,
+    UserInputError,
+)
+from bibtex_fields import BIBTEX_FIELDS
+
+
+def _require_field(value, label):
+    text_value = (value or "").strip()
+    if not text_value:
+        raise UserInputError(f"{label} is required")
+    return text_value
+
+
+def _read_field(field):
+    name = field["name"]
+    label = field.get("label", name)
+    raw_value = request.form.get(name, "")
+
+    if name == "year":
+        return validate_reference_year(raw_value)
+    if name == "title":
+        return validate_reference_title(raw_value)
+    if field.get("required"):
+        return _require_field(raw_value, label)
+    return raw_value
 
 
 @app.route("/")
@@ -12,34 +38,45 @@ def index():
     return render_template("index.html", references=references)
 
 
-@app.route("/new_book")
+@app.route("/new_reference")
 def new():
     created = request.args.get("created") == "true"
     error_message = request.args.get("error")
     return render_template(
-        "new_book.html", book_created=created, error_message=error_message
+        "new_book.html",
+        reference_created=created,
+        error_message=error_message,
+        field_map=BIBTEX_FIELDS,
     )
 
 
 @app.route("/create_references", methods=["POST"])
 def reference_creation():
+    entry_type = (request.form.get("entry_type") or "book").strip().lower()
     citekey = request.form.get("citekey")
-    author = request.form.get("author")
-    title = request.form.get("title")
-    year = request.form.get("year")
-    publisher = request.form.get("publisher")
+    type_config = BIBTEX_FIELDS.get(entry_type)
 
     try:
-        validate_reference_title(title)
-        year_value = validate_reference_year(year)
+        citekey = _require_field(citekey, "CiteKey")
+        if not type_config:
+            raise UserInputError("Unsupported reference type")
 
-        create_references(citekey, author, title, year_value, publisher)
+        data = {}
+        for field in type_config.get("required", []) + type_config.get(
+            "optional", []
+        ):
+            value = _read_field(field)
+            if value is not None:
+                data[field["name"]] = value
+
+        create_references(citekey, entry_type, data)
         return redirect(url_for("new", created="true"))
 
     # pylint: disable=W0703
     except Exception as error:
         query = urlencode({"error": str(error)})
         return redirect(f"{url_for('new')}?{query}")
+
 
 @app.route("/delete_reference/<key>", methods=["POST"])
 def reference_deletion(key):

@@ -8,6 +8,7 @@ def validate_reference_title(title):
 
     if len(title) > 1000:
         raise UserInputError("Title length must be smaller than 1000")
+    return cleaned_title
 
 
 def validate_reference_year(year):

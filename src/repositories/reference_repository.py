@@ -29,11 +29,8 @@ def get_references():
         parsed_references.append(
             Reference(
                 citekey,
-                payload.get("author"),
-                payload.get("title"),
-                payload.get("year"),
-                payload.get("publisher"),
-                entry_type=entry_type,
+                entry_type,
+                payload,
             )
         )
 
@@ -41,14 +38,19 @@ def get_references():
 
 
 # pylint: disable=C0301
-def create_references(citekey, author, title, year, publisher, entry_type="book"):
+def create_references(citekey, entry_type, data):
     """Viitteiden luominen tietokantaan"""
-    data = {
-        "author": author,
-        "title": title,
-        "year": year,
-        "publisher": publisher,
-    }
+    cleaned_data = {}
+    for key, value in data.items():
+        if value is None:
+            continue
+        if isinstance(value, str):
+            trimmed = value.strip()
+            if trimmed == "":
+                continue
+            cleaned_data[key] = trimmed
+        else:
+            cleaned_data[key] = value
     sql = text(
         "INSERT INTO bibtex_references (citekey, entry_type, data) VALUES (:citekey, :entry_type, :data)"
     )
@@ -57,7 +59,7 @@ def create_references(citekey, author, title, year, publisher, entry_type="book"
         {
             "citekey": citekey,
             "entry_type": entry_type,
-            "data": json.dumps(data),
+            "data": json.dumps(cleaned_data),
         },
     )
     db.session.commit()
