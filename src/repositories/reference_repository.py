@@ -37,3 +37,20 @@ def create_references(citekey, author, title, year, publisher):
         },
     )
     db.session.commit()
+
+def update_reference(citekey, author, title, year, publisher):
+    """Viitteen päivittäminen tietokantaan"""
+    sql = text(
+        "UPDATE book_references SET author = :author, title = :title, year = :year, publisher = :publisher WHERE citekey = :citekey"
+    )
+    db.session.execute(
+        sql,
+        {
+            "citekey": citekey,
+            "author": author,
+            "title": title,
+            "year": year,
+            "publisher": publisher,
+        },
+    )
+    db.session.commit()
