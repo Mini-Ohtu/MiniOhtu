@@ -3,10 +3,11 @@ class UserInputError(Exception):
 
 
 def validate_reference_title(title):
-    if len(title) == 0:
+    cleaned_title = (title or "").strip()
+    if len(cleaned_title) == 0:
         raise UserInputError("Title length can't be 0")
 
-    if len(title) > 1000:
+    if len(cleaned_title) > 1000:
         raise UserInputError("Title length must be smaller than 1000")
     return cleaned_title
 

@@ -14,7 +14,7 @@ After adding a book show confirmation
     Input Text  title  Test Title
     Input Text  year  2024
     Input Text  publisher  Test Publisher
-    Click Button  Save
+    Click Save Button
     Wait Until Page Contains  Reference added
 
 Invalid year shows an error
@@ -25,7 +25,7 @@ Invalid year shows an error
     Input Text  title  Bad Year Title
     Input Text  year  not-a-year
     Input Text  publisher  Bad Pub
-    Click Button  Save
+    Click Save Button
     Wait Until Page Contains  Year must be an integer
 
 Article type requires its own fields
@@ -39,9 +39,36 @@ Article type requires its own fields
     Input Text  year  2023
     Input Text  volume  10
     Input Text  pages  100-110
-    Click Button  Save
+    Click Save Button
     Wait Until Page Contains  Reference added
     Go To  ${HOME_URL}
     Wait Until Page Contains  @article{ article-1
     Wait Until Page Contains  journal = { Journal Name }
     Wait Until Page Contains  volume = { 10 }
+
+Article creation shows up in list
+    Go To  ${HOME_URL}
+    Click Link  Create new reference
+    Click Element  entry_type_article
+    Input Text  citekey  article-show
+    Input Text  author  Show Author
+    Input Text  title  Show Title
+    Input Text  journal  Show Journal
+    Input Text  year  2022
+    Click Save Button
+    Wait Until Page Contains  Reference added
+    Go To  ${HOME_URL}
+    Wait Until Page Contains  @article{ article-show
+    Wait Until Page Contains  Show Journal
+
+Missing required article field shows error
+    Go To  ${HOME_URL}
+    Click Link  Create new reference
+    Click Element  entry_type_article
+    Input Text  citekey  article-missing
+    Input Text  author  Missing Journal Author
+    Input Text  title  Missing Journal Title
+    Input Text  journal  ${SPACE}
+    Input Text  year  2024
+    Click Save Button
+    Wait Until Page Contains  Journal * is required
