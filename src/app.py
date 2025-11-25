@@ -61,7 +61,7 @@ def reference_creation():
             raise UserInputError("Unsupported reference type")
 
         data = {}
-        required_fields, optional_fields = type_config 
+        required_fields, optional_fields = type_config
 
         for field_name in required_fields:
             value = _read_field(field_name, True)
