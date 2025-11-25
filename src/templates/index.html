@@ -17,19 +17,25 @@ Reference app
 
 {% else %}
 
-<pre>
 {% for ref in references %}
-@book{ {{ ref.citekey }},
-  author = { {{ ref.author }} },
-  title  = { {{ ref.title }} },
-  year   = { {{ ref.year }} },
-  publisher = { {{ ref.publisher }} }
-}
-</pre>
-<form method="POST" action="/delete_reference/{{ ref.citekey }}">
-<button type="submit">Delete</button>
-</form>
-<button onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+<div class="d-flex align-items-start gap-3">
+  <pre>
+  @book{ {{ ref.citekey }},
+    author = { {{ ref.author }} },
+    title  = { {{ ref.title }} },
+    year   = { {{ ref.year }} },
+    publisher = { {{ ref.publisher }} }
+  }
+  </pre>
+
+  <div class="d-flex flex-column gap-1">
+    <form method="POST" action="/delete_reference/{{ ref.citekey }}">
+      <button class="mt-2" type="submit">Delete</button>
+    </form>
+      <button class="mt-2" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+  </div>
+</div>
+
 {% endfor %}
 {% endif %}
 {% endblock %}

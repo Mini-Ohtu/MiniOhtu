@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 from flask import redirect, render_template, request, jsonify, url_for
 from db_helper import reset_db
-from repositories.reference_repository import get_references, create_references, update_reference
+from repositories.reference_repository import get_references, create_references, update_reference, delete_reference
 from config import app, test_env
 from util import validate_reference_title, validate_reference_year
 
@@ -63,10 +63,9 @@ def edit_reference(key):
 
 @app.route("/delete_reference/<key>", methods=["POST"])
 def reference_deletion(key):
-    print(key)
-    print("reference will be deleted")
-    # delete_reference(key)
+    delete_reference(key)
     return redirect("/")
+
 
 # testausta varten oleva reitti
 if test_env:

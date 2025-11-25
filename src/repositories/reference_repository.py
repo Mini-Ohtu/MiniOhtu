@@ -38,6 +38,18 @@ def create_references(citekey, author, title, year, publisher):
     )
     db.session.commit()
 
+
+def delete_reference(citekey):
+    """Viitteiden poisto tietokannasta"""
+    sql = text("DELETE FROM book_references WHERE citekey = :citekey")
+    db.session.execute(
+        sql,
+        {
+            "citekey": citekey,
+        },
+    )
+    db.session.commit()
+    
 def update_reference(citekey, author, title, year, publisher):
     """Viitteen päivittäminen tietokantaan"""
     sql = text(
