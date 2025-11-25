@@ -7,15 +7,24 @@ function renderFields(type) {
   if (!container || !typeHeading) return;
 
   const config = FIELD_MAP[type];
-  const requiredFields = config.required;
-  const optionalFields = config.optional;
+  const requiredFields = config[0];
+  const optionalFields = config[1];
 
-  const fields = [...requiredFields, ...optionalFields];
+  const toLabel = (name, required) => {
+    const base = name.replace(/_/g, " ");
+    const pretty = base.charAt(0).toUpperCase() + base.slice(1);
+    return required ? `${pretty} *` : pretty;
+  };
+
+  const fields = [
+    ...requiredFields.map((name) => ({ name, required: true })),
+    ...optionalFields.map((name) => ({ name, required: false })),
+  ];
   // Simple markup builder keeps HTML inline.
   container.innerHTML = fields
     .map(
       (field) =>
-        `<p><label for="${field.name}">${field.label || field.name}</label><br>` +
+        `<p><label for="${field.name}">${toLabel(field.name, field.required)}</label><br>` +
         `<input type="text" id="${field.name}" name="${field.name}" ${
           field.required ? "required" : ""
         }></p>`

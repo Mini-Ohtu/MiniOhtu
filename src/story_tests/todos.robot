@@ -71,4 +71,4 @@ Missing required article field shows error
     Input Text  journal  ${SPACE}
     Input Text  year  2024
     Click Save Button
-    Wait Until Page Contains  Journal * is required
+    Wait Until Page Contains  journal is required

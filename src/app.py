@@ -18,16 +18,15 @@ def _require_field(value, label):
     return text_value
 
 
-def _read_field(field):
-    name = field["name"]
-    label = field.get("label", name)
+def _read_field(name, required):
+    label = name
     raw_value = request.form.get(name, "")
 
     if name == "year":
         return validate_reference_year(raw_value)
     if name == "title":
         return validate_reference_title(raw_value)
-    if field.get("required"):
+    if required:
         return _require_field(raw_value, label)
     return raw_value
 
@@ -62,12 +61,17 @@ def reference_creation():
             raise UserInputError("Unsupported reference type")
 
         data = {}
-        for field in type_config.get("required", []) + type_config.get(
-            "optional", []
-        ):
-            value = _read_field(field)
+        required_fields, optional_fields = type_config 
+
+        for field_name in required_fields:
+            value = _read_field(field_name, True)
             if value is not None:
-                data[field["name"]] = value
+                data[field_name] = value
+
+        for field_name in optional_fields:
+            value = _read_field(field_name, False)
+            if value is not None:
+                data[field_name] = value
 
         create_references(citekey, entry_type, data)
         return redirect(url_for("new", created="true"))
