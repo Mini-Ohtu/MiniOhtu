@@ -50,11 +50,12 @@ def reference_creation():
 
 @app.route("/edit_reference/<key>", methods=["GET", "POST"])
 def edit_reference(key):
+    page = "edit_reference.html"
     if request.method == "GET":
         viite = get_reference_by_key(key)
         if viite is None:
             return "Reference not found", 404
-        return render_template("edit_reference.html", viite=viite)
+        return render_template(page, viite=viite)
     citekey = key
     author = request.form.get("author")
     title = request.form.get("title")
@@ -70,14 +71,14 @@ def edit_reference(key):
         update_reference(citekey, author, title, year, publisher)
 
         viite = get_reference_by_key(key)
-        success_message = "Päivitys onnistui"
-        return render_template("edit_reference.html", viite=viite, success_message=success_message)
+        success_message = "Update successful"
+        return render_template(page, viite=viite, success_message=success_message)
 
     # pylint: disable=W0718
     except Exception as error:
         error_message = str(error)
         viite = get_reference_by_key(key)
-        return render_template("edit_reference.html", viite=viite, error_message=error_message)
+        return render_template(page, viite=viite, error_message=error_message)
 
 
 @app.route("/delete_reference/<key>", methods=["POST"])
