@@ -41,21 +41,26 @@ def get_references() -> list:
 
 def get_filtered_references(args: MultiDict[str, str]) -> list:
     result_list = get_references()
-    #print(f"args: {args}")
+    # print(f"args: {args}")
     if len(args) == 0:
         return result_list
 
     # for filter_arg in args:
     for key, value in args.items(multi=True):
-        #print(f"filter_args: {key}, {value}")
+        # print(f"filter_args: {key}, {value}")
 
         holder = []
         for result in result_list:
             string_result = re.findall(value, str(result))
+            # print(f"result: {result}")
+            # print(f"result type: {type(result)}")
+            # print(f"dir: {dir(result)}")
             if hasattr(result, key):
-                string_result = re.findall(value, str(result[key]))
-            if hasattr(result["data"], key):
-                string_result = re.findall(value, str(result["data"][key]))
+                print("hereeee")
+                string_result = re.findall(value, str(getattr(result, key)))
+            # if hasattr(result["data"], key):
+            # print(f"res data: {result["data"]}")
+            # string_result = re.findall(value, str(result["data"][key]))
             if len(string_result) > 0:
                 holder.append(result)
         result_list = holder
