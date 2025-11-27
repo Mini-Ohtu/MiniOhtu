@@ -72,3 +72,17 @@ Missing required article field shows error
     Input Text  year  2024
     Click Save Button
     Wait Until Page Contains  journal is required
+
+Site does not show reference after deleting it
+    Go To  ${HOME_URL}
+    Click Link  Create new reference
+    Input Text  citekey  deleting
+    Input Text  author  Book Author
+    Input Text  title  Book to delete
+    Input Text  year  2023
+    Input Text  publisher  Book Publisher
+    Click Save Button
+    Wait Until Page Contains  Reference added
+    Go To  ${HOME_URL}
+    Click Button  Delete
+    Page Should Not Contain  Book to delete
