@@ -16,19 +16,26 @@ function renderFields(type) {
     return required ? `${pretty} *` : pretty;
   };
 
+  const existingData = (window.EXISTING_DATA && window.EXISTING_DATA.data) || {};
+
   const fields = [
     ...requiredFields.map((name) => ({ name, required: true })),
     ...optionalFields.map((name) => ({ name, required: false })),
   ];
   // Simple markup builder keeps HTML inline.
   container.innerHTML = fields
-    .map(
-      (field) =>
+    .map((field) => {
+      const valueAttr =
+        existingData[field.name] !== undefined
+          ? ` value="${String(existingData[field.name])}"`
+          : "";
+      return (
         `<p><label for="${field.name}">${toLabel(field.name, field.required)}</label><br>` +
-        `<input type="text" id="${field.name}" name="${field.name}" ${
+        `<input type="text" id="${field.name}" name="${field.name}"${valueAttr} ${
           field.required ? "required" : ""
         }></p>`
-    )
+      );
+    })
     .join("");
 
   const prettyType = type ? type.charAt(0).toUpperCase() + type.slice(1) : "";
@@ -39,8 +46,8 @@ function setupDynamicFields() {
   // Wire radio buttons to re-render fields on type change.
   const typeInputs = document.querySelectorAll('input[name="entry_type"]');
   const initial =
-    document.querySelector('input[name="entry_type"]:checked') ||
-    typeInputs[0];
+    (window.EXISTING_DATA && window.EXISTING_DATA.entry_type) ||
+    (document.querySelector('input[name="entry_type"]:checked') || typeInputs[0] || {}).value;
 
   typeInputs.forEach((input) => {
     input.addEventListener("change", (event) => {
@@ -48,7 +55,7 @@ function setupDynamicFields() {
     });
   });
 
-  renderFields(initial ? initial.value : "book");
+  renderFields(initial || "book");
 }
 
 document.addEventListener("DOMContentLoaded", setupDynamicFields);

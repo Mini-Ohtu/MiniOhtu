@@ -4,6 +4,8 @@ class Reference:
         self.citekey = citekey
         self.entry_type = entry_type
         self.data = data or {}
+        for key, value in self.data.items():
+            setattr(self, key, value)
 
     def __str__(self):
         return f"{self.entry_type}:{self.citekey} {self.data}"
