@@ -3,40 +3,36 @@
 
 {% block body %}
 
-<h2>Edit BibTex reference {{ viite.citekey }}</h2>
+<h2>Edit BibTeX reference {{ viite.citekey }}</h2>
+<p>Fields marked * are required for this type ({{ viite.entry_type }}).</p>
 
 <form action="{{ url_for('edit_reference', key=viite.citekey) }}" method="POST">
+  <p>
+    Type:<br>
+    {% for type in field_map.keys() %}
+      <label>
+        <input type="radio" name="entry_type" value="{{ type }}" id="entry_type_{{ type }}"
+               {% if viite.entry_type == type %}checked{% endif %} disabled>
+        {{ type.capitalize() }}
+      </label>
+    {% endfor %}
+    <input type="hidden" name="entry_type" value="{{ viite.entry_type }}">
+  </p>
 
-  <div style="display: flex;">
-    <label for="citekey" style="width: 70px;">CiteKey</label>
-    <input type="text" name="citekey" value="{{ viite.citekey }}" readonly >
-  </div>
+  <h3 id="type-heading">{{ viite.entry_type.capitalize() }}</h3>
 
-  <div style="display: flex;">
-    <label for="author" style="width: 70px;">Author</label>
-    <input type="text" name="author" value="{{ viite.author }}">
-  </div>
+  <p>
+    <label for="citekey">CiteKey *</label><br>
+    <input type="text" name="citekey" id="citekey" value="{{ viite.citekey }}" readonly>
+  </p>
 
-  <div style="display: flex;">
-    <label for="title" style="width: 70px;">Title</label>
-    <input type="text" name="title" value="{{ viite.title }}">
-  </div>
+  <div id="fields-container"></div>
 
-  <div style="display: flex;">
-    <label for="year" style="width: 70px;">Year</label>
-    <input type="text" name="year" value="{{ viite.year }}">
-  </div>
-
-  <div style="display: flex;">
-    <label for="publisher" style="width: 70px;">Publisher</label>
-    <input type="text" name="publisher" value="{{ viite.publisher }}">
-  </div>
-
-  <button type="submit">
-    Save changes
-  </button>
+  <p>
+    <button type="submit">Save changes</button>
+    <a href="/">Back</a>
+  </p>
 </form>
-<a href="/">Back</a>
 
 {% if success_message %}
   <p style="margin-top: 1rem; color: green;">{{ success_message }}</p>
@@ -46,4 +42,12 @@
   <p style="margin-top: 1rem; color: red;">{{ error_message }}</p>
 {% endif %}
 
+<script>
+  window.FIELD_MAP = {{ field_map | tojson }};
+  window.EXISTING_DATA = {
+    entry_type: "{{ viite.entry_type }}",
+    data: {{ viite.data | tojson }},
+  };
+</script>
+<script src="{{ url_for('static', filename='form_fields.js') }}"></script>
 {% endblock %}
