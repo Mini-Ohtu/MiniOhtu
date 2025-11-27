@@ -41,15 +41,15 @@ def _read_field(name, required):
 
 @app.route("/")
 def index():
-    filters = request.args.get("filter", default="", type=str)
-    fislters2 = []
-    print(f"reguest.args: {request.args}")
-    print(f"filters: {filters}")
+    # filters = request.args.get("filter", default="", type=str)
+    # fislters2 = []
+    # print(f"reguest.args: {request.args}")
+    # print(f"filters: {filters}")
     # references: list = get_filtered_references(filters)
 
-    for arg in request.args:
-        fislters2.append(arg[1])
-    print(f"fissl2: {fislters2}")
+    # for arg in request.args:
+    #     fislters2.append(arg[1])
+    # print(f"fissl2: {fislters2}")
     references: list = get_filtered_references(request.args)
     return render_template("index.html", references=references)
 
