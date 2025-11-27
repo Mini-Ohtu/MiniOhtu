@@ -1,3 +1,4 @@
+import re
 from urllib.parse import urlencode
 from flask import redirect, render_template, request, jsonify, url_for
 from db_helper import reset_db
@@ -6,7 +7,8 @@ from repositories.reference_repository import (
     get_references,
     create_references,
     update_reference,
-    get_reference_by_key
+    get_reference_by_key,
+    get_filtered_references,
 )
 from config import app, test_env
 from util import (
@@ -39,7 +41,26 @@ def _read_field(name, required):
 
 @app.route("/")
 def index():
-    references = get_references()
+    filters = request.args.get("filter", default="", type=str)
+    fislters2 = []
+    print(f"reguest.args: {request.args}")
+    print(f"filters: {filters}")
+    # references: list = get_filtered_references(filters)
+
+    for arg in request.args:
+        fislters2.append(arg[1])
+    print(f"fissl2: {fislters2}")
+    references: list = get_filtered_references(request.args)
+    return render_template("index.html", references=references)
+
+
+@app.route("/2")
+def index2():
+    references: list = get_references()
+    for x in references:
+        print(f"koko: {x}")
+        if len(re.findall("lohi", str(x))) > 0:
+            print(f"x: {x}")
     return render_template("index.html", references=references)
 
 
@@ -143,7 +164,6 @@ def edit_reference(key):
             error_message=error_message,
             field_map=BIBTEX_FIELDS,
         )
-
 
 
 @app.route("/delete_reference/<key>", methods=["POST"])
