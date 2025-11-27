@@ -23,7 +23,7 @@ def _read_field(name, required):
     raw_value = request.form.get(name, "")
 
     if name == "year":
-        return validate_reference_year(raw_value)
+        return validate_reference_year(raw_value, required)
     if name == "title":
         return validate_reference_title(raw_value)
     if required:
