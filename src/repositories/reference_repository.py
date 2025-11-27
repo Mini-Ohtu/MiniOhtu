@@ -63,3 +63,52 @@ def create_references(citekey, entry_type, data):
         },
     )
     db.session.commit()
+
+
+def delete_reference(citekey):
+    """Viitteiden poisto tietokannasta"""
+    sql = text("DELETE FROM book_references WHERE citekey = :citekey")
+    db.session.execute(
+        sql,
+        {
+            "citekey": citekey,
+        },
+    )
+    db.session.commit()
+
+def update_reference(citekey, author, title, year, publisher):
+    """Viitteen päivittäminen tietokantaan"""
+    sql = text(
+        "UPDATE book_references SET author = :author, title = :title, year = :year, publisher = :publisher WHERE citekey = :citekey"
+    )
+    db.session.execute(
+        sql,
+        {
+            "citekey": citekey,
+            "author": author,
+            "title": title,
+            "year": year,
+            "publisher": publisher,
+        },
+    )
+    db.session.commit()
+
+def get_reference_by_key(citekey):
+    """Hakee viitteen tietokannasta citekeyn perusteella"""
+    sql = text(
+        "SELECT citekey, author, title, year, publisher FROM book_references WHERE citekey = :citekey"
+    )
+    result = db.session.execute(
+        sql,
+        {
+            "citekey": citekey,
+        },
+    )
+    reference = result.fetchone()
+
+    if reference is None:
+        return None
+
+    return Reference(
+        reference[0], reference[1], reference[2], reference[3], reference[4]
+    )
