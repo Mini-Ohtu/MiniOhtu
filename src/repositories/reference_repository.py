@@ -41,29 +41,27 @@ def get_references() -> list:
 
 def get_filtered_references(args: MultiDict[str, str]) -> list:
     result_list = get_references()
-    # print(f"args: {args}")
-    if len(args) == 0:
+
+    if len(args) == 0 or not isinstance(result_list, list):
         return result_list
 
-    # for filter_arg in args:
     for key, value in args.items(multi=True):
-        # print(f"filter_args: {key}, {value}")
-
         holder = []
         for result in result_list:
-            string_result = re.findall(value, str(result))
-            # print(f"result: {result}")
-            # print(f"result type: {type(result)}")
-            # print(f"dir: {dir(result)}")
+            search = ""
             if hasattr(result, key):
-                print("hereeee")
-                string_result = re.findall(value, str(getattr(result, key)))
-            # if hasattr(result["data"], key):
-            # print(f"res data: {result["data"]}")
-            # string_result = re.findall(value, str(result["data"][key]))
+                search = str(getattr(result, key))
+            else:
+                search = str(result)
+            string_result = re.findall(value, search)
             if len(string_result) > 0:
                 holder.append(result)
+
         result_list = holder
+
+    if len(result_list) < 1:
+        return "Ei viitteitä haussa/filterillä."
+
     return result_list
 
 
