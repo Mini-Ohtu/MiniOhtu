@@ -12,16 +12,17 @@ def validate_reference_title(title):
     return cleaned_title
 
 
-def validate_reference_year(year):
+def validate_reference_year(year, required=True):
     """
     Accept year from form input, ensure it represents an integer, return parsed value.
+    If optional and empty, return None.
     """
-    if year is None:
-        raise UserInputError("Year is required")
 
-    year_str = str(year).strip()
+    year_str = "" if year is None else str(year).strip()
     if not year_str:
-        raise UserInputError("Year is required")
+        if required:
+            raise UserInputError("Year is required")
+        return None
 
     try:
         return int(year_str)
