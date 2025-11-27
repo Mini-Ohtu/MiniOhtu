@@ -4,16 +4,20 @@ repos:
     - id: pylint
       name: pylint
       entry: pylint
-      language: system
+      language: python
       types: [python]
-      require_serial: true
+      additional_dependencies:
+        - pylint
 
     - id: coverage
       name: run test coverage
       entry: bash
-      language: system
+      language: python
       stages: [pre-push]
       pass_filenames: false
+      additional_dependencies:
+        - coverage
+        - pytest
       args:
         - -c
         - |
