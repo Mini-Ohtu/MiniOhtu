@@ -8,8 +8,8 @@ def _db_backend():
 
 
 def reset_db():
-    print("Clearing contents from table book_references")
-    sql = text("DELETE FROM book_references")
+    print("Clearing contents from table bibtex_references")
+    sql = text("DELETE FROM bibtex_references")
     db.session.execute(sql)
     db.session.commit()
 
@@ -53,8 +53,11 @@ def setup_db():
         schema_sql = f.read().strip()
 
     if _db_backend() == "sqlite":
-        schema_sql = schema_sql.replace(
-            "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
+        schema_sql = (
+            schema_sql.replace(
+                "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
+            )
+            .replace("JSON NOT NULL", "TEXT NOT NULL")
         )
 
     sql = text(schema_sql)

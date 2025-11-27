@@ -29,3 +29,7 @@ Open And Configure Browser
 Reset Database
     Go To  ${RESET_URL}
 
+Click Save Button
+    Wait Until Element Is Visible  //button[@type='submit' and normalize-space()='Save']
+    Scroll Element Into View       //button[@type='submit' and normalize-space()='Save']
+    Click Element                  //button[@type='submit' and normalize-space()='Save']
