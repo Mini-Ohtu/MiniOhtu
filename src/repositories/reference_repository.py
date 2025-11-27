@@ -67,7 +67,7 @@ def create_references(citekey, entry_type, data):
 
 def delete_reference(citekey):
     """Viitteiden poisto tietokannasta"""
-    sql = text("DELETE FROM book_references WHERE citekey = :citekey")
+    sql = text("DELETE FROM bibtex_references WHERE citekey = :citekey")
     db.session.execute(
         sql,
         {
@@ -76,19 +76,30 @@ def delete_reference(citekey):
     )
     db.session.commit()
 
-def update_reference(citekey, author, title, year, publisher):
+def update_reference(citekey, data):
     """Viitteen päivittäminen tietokantaan"""
+    existing = get_reference_by_key(citekey)
+    merged = dict(existing.data) if existing else {}
+
+    for key, value in data.items():
+        if value is None:
+            continue
+        if isinstance(value, str):
+            trimmed = value.strip()
+            if trimmed == "":
+                continue
+            merged[key] = trimmed
+        else:
+            merged[key] = value
+
     sql = text(
-        "UPDATE book_references SET author = :author, title = :title, year = :year, publisher = :publisher WHERE citekey = :citekey"
+        "UPDATE bibtex_references SET data = :data WHERE citekey = :citekey"
     )
     db.session.execute(
         sql,
         {
             "citekey": citekey,
-            "author": author,
-            "title": title,
-            "year": year,
-            "publisher": publisher,
+            "data": json.dumps(merged),
         },
     )
     db.session.commit()
@@ -96,7 +107,7 @@ def update_reference(citekey, author, title, year, publisher):
 def get_reference_by_key(citekey):
     """Hakee viitteen tietokannasta citekeyn perusteella"""
     sql = text(
-        "SELECT citekey, author, title, year, publisher FROM book_references WHERE citekey = :citekey"
+        "SELECT citekey, entry_type, data FROM bibtex_references WHERE citekey = :citekey"
     )
     result = db.session.execute(
         sql,
@@ -104,11 +115,19 @@ def get_reference_by_key(citekey):
             "citekey": citekey,
         },
     )
-    reference = result.fetchone()
+    row = result.fetchone()
 
-    if reference is None:
+    if row is None:
         return None
 
-    return Reference(
-        reference[0], reference[1], reference[2], reference[3], reference[4]
-    )
+    citekey, entry_type, data = row
+    payload = data
+    if isinstance(payload, str):
+        try:
+            payload = json.loads(payload)
+        except json.JSONDecodeError:
+            payload = {}
+    if not isinstance(payload, dict):
+        payload = {}
+
+    return Reference(citekey, entry_type, payload)
