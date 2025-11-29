@@ -10,6 +10,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      TEST_ENV: "true"
+
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python 3.12
