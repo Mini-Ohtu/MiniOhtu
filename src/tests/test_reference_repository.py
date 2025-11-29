@@ -2,7 +2,7 @@ import json
 import unittest
 from types import SimpleNamespace
 
-import repositories.reference_repository as reference_repository
+from repositories import reference_repository
 from entities.reference import Reference
 
 
@@ -56,7 +56,7 @@ class ReferenceRepositoryTests(unittest.TestCase):
     def test_update_reference_merges_and_cleans(self):
         existing_ref = Reference("ck2", "book", {"author": "Old", "note": "keep"})
 
-        def fake_get_by_key(citekey):
+        def fake_get_by_key(_citekey):
             return existing_ref
 
         reference_repository.get_reference_by_key = fake_get_by_key
@@ -101,7 +101,7 @@ class ReferenceRepositoryTests(unittest.TestCase):
         self.assertTrue(self.fake_session.committed)
 
     def test_update_reference_without_existing_starts_from_empty(self):
-        reference_repository.get_reference_by_key = lambda citekey: None
+        reference_repository.get_reference_by_key = lambda _citekey: None
         reference_repository.update_reference(
             "ck5", {"author": "  Author ", "notes": None, "title": " Title "}
         )
