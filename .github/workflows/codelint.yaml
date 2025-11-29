@@ -10,11 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      TEST_ENV: "true"
-
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python 3.12
@@ -26,7 +21,15 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run tests
+        env:
+          DATABASE_URL: sqlite:///test.db
+          SECRET_KEY: dev-secret
+          TEST_ENV: "true"
         run: poetry run coverage run --branch -m pytest
 
       - name: pylinter
+        env:
+          DATABASE_URL: sqlite:///test.db
+          SECRET_KEY: dev-secret
+          TEST_ENV: "true"
         run: poetry run pylint src
