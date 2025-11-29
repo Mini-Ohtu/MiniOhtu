@@ -70,9 +70,11 @@ class AppTests(unittest.TestCase):
         updated_storage = {}
 
         def fake_get(key):
+            self.assertEqual(key, "ck3")
             return ref
 
         def fake_update(citekey, data):
+            self.assertEqual(citekey, "ck3")
             updated_storage.update(data)
 
         with patch("app.get_reference_by_key", side_effect=fake_get), patch(

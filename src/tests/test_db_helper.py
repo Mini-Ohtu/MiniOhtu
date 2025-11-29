@@ -1,4 +1,3 @@
-import os
 import unittest
 from types import SimpleNamespace
 from unittest.mock import mock_open, patch
@@ -6,7 +5,7 @@ from unittest.mock import mock_open, patch
 import db_helper
 
 
-class FakeResult:
+class FakeResult:  # pylint: disable=too-few-public-methods
     def __init__(self, rows=None):
         self._rows = rows or []
 
@@ -41,7 +40,13 @@ class DbHelperTests(unittest.TestCase):
 
     def test_setup_db_drops_existing_and_creates_schema(self):
         schema_sql = "CREATE TABLE example(id INT);"
-        with patch("db_helper._db_backend", return_value="postgresql"), patch("db_helper.tables", return_value=["old1", "old2"]), patch("db_helper.open", mock_open(read_data=schema_sql), create=True):
+        with patch("db_helper._db_backend", return_value="postgresql"), patch(
+            "db_helper.tables", return_value=["old1", "old2"]
+        ), patch(
+            "db_helper.open",
+            mock_open(read_data=schema_sql),
+            create=True,
+        ):
             db_helper.setup_db()
 
         executed = [sql for sql, _ in self.fake_session.executes]
