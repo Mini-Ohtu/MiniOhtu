@@ -1,11 +1,13 @@
 import json
+import re
 from sqlalchemy import text
+from werkzeug.datastructures import MultiDict
 from config import db
 
 from entities.reference import Reference
 
 
-def get_references():
+def get_references() -> list:
     """Viitteiden haku, huomioi if-vaihtoehto jos ei viitteitä löydy tietokannasta"""
     result = db.session.execute(
         text("SELECT citekey, entry_type, data FROM bibtex_references")
@@ -35,6 +37,32 @@ def get_references():
         )
 
     return parsed_references
+
+
+def get_filtered_references(args: MultiDict[str, str]) -> list:
+    result_list = get_references()
+
+    if len(args) == 0 or not isinstance(result_list, list):
+        return result_list
+
+    for key, value in args.items(multi=True):
+        holder = []
+        for result in result_list:
+            search = ""
+            if hasattr(result, key):
+                search = str(getattr(result, key))
+            else:
+                search = str(result)
+            string_result = re.findall(value, search)
+            if len(string_result) > 0:
+                holder.append(result)
+
+        result_list = holder
+
+    if len(result_list) < 1:
+        return "Ei viitteitä haussa/filterillä."
+
+    return result_list
 
 
 # pylint: disable=C0301
@@ -76,6 +104,7 @@ def delete_reference(citekey):
     )
     db.session.commit()
 
+
 def update_reference(citekey, data):
     """Viitteen päivittäminen tietokantaan"""
     existing = get_reference_by_key(citekey)
@@ -92,9 +121,7 @@ def update_reference(citekey, data):
         else:
             merged[key] = value
 
-    sql = text(
-        "UPDATE bibtex_references SET data = :data WHERE citekey = :citekey"
-    )
+    sql = text("UPDATE bibtex_references SET data = :data WHERE citekey = :citekey")
     db.session.execute(
         sql,
         {
@@ -103,6 +130,7 @@ def update_reference(citekey, data):
         },
     )
     db.session.commit()
+
 
 def get_reference_by_key(citekey):
     """Hakee viitteen tietokannasta citekeyn perusteella"""
