@@ -90,15 +90,14 @@ Site does not show reference after deleting it
 Tag can be saved to reference
     Go To  ${HOME_URL}
     Click Link  Create new reference
-    Click Element  entry_type_book
     Input Text  citekey  book-1
     Input Text  author  Article Author
     Input Text  title  Article Title
     Input Text  year  2023
     Input Text  publisher  Book Publisher
-    Input Text  tag lukematta
+    Input Text  tag  Lukematta
     Click Save Button
     Wait Until Page Contains  Reference added
     Go To  ${HOME_URL}
     Wait Until Page Contains  @book{ book-1
-    Wait Until Page Contains  tag = { lukematta }
+    Wait Until Page Contains  tag = { Lukematta }
