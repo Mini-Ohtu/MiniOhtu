@@ -12,6 +12,23 @@ Reference app
   <a href="{{ url_for('new') }}">Create new reference</a>
 </div>
 
+<div class="mb-3 d-flex gap-2 align-items-end">
+  <form method="get" class="d-flex gap-2 mb-0">
+    <input
+      type="text"
+      name="ref"
+      placeholder="Search references"
+      class="form-control"
+      value="{{ request.args.get('ref', '') }}"
+    />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <form method="get" class="mb-0">
+    <button type="submit" class="btn btn-secondary">Show all</button>
+  </form>
+</div>
+
 {% if references is string %}
   <p>{{ references }}</p>
 
