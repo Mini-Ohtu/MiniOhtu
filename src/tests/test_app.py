@@ -11,7 +11,7 @@ class AppTests(unittest.TestCase):
         self.client = flask_app.test_client()
 
     def test_index_renders_ok(self):
-        with patch("app.get_references", return_value="Ei viitteitä"):
+        with patch("app.get_filtered_references", return_value="Ei viitteitä"):
             resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
         self.assertIn(b"Reference App", resp.data)
