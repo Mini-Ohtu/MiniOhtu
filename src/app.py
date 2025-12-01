@@ -7,6 +7,11 @@ from repositories.reference_repository import (
     update_reference,
     get_reference_by_key,
     get_filtered_references,
+    get_all_tags,
+    get_tags_by_reference,
+    add_tag,
+    link_tag_to_reference,
+    get_reference_id
 )
 from config import app, test_env
 from util import (
@@ -90,21 +95,23 @@ def reference_creation():
 
 @app.route("/edit_reference/<key>", methods=["GET", "POST"])
 def edit_reference(key):
+    viite = get_reference_by_key(key)
+    if viite is None:
+        return "Reference not found", 404 
     if request.method == "GET":
-        viite = get_reference_by_key(key)
-        if viite is None:
-            return "Reference not found", 404
+        #huom. lisätty tag-metodeja
+        tags=get_all_tags()
+        ref_id=get_reference_id(key)
+        reftags = get_tags_by_reference(ref_id) 
         return render_template(
             "edit_reference.html",
             viite=viite,
             field_map=BIBTEX_FIELDS,
+            tags=tags,
+            reftags=reftags,
         )
     citekey = key
-
     error_message = None
-    viite = get_reference_by_key(key)
-    if viite is None:
-        return "Reference not found", 404
     entry_type = viite.entry_type
     type_config = BIBTEX_FIELDS.get(entry_type)
 
@@ -149,6 +156,37 @@ def edit_reference(key):
 def reference_deletion(key):
     delete_reference(key)
     return redirect("/")
+
+
+
+#tägin lisäys 
+# huom. tägin lisäysmahdollisuus nyt vain muokkauksessa 
+# pitäisikö olla myös uuden viitteen lisäyksessä?
+
+@app.route("/add_tag/<key>", methods=["GET", "POST"]) 
+def adding_tag(key):
+    viite = get_reference_by_key(key)
+    if request.method == "GET":
+        return render_template("new_tag.html", viite=viite)
+    if request.method == "POST":
+        tag_name = request.form["tag_name"]
+        #olisiko parempi laittaa pudotusvalikkoon mahdollisuus kirjoittaa uusi tägi? 
+        # nyt on siis templates/new_tag.html
+        #if tag_name == "other":
+        #    tag_name = request.form["new_tag"]       
+        tag_id=add_tag(tag_name)
+        reference_id=get_reference_id(key)
+        #todo: if not tag_name or not tag_id or not reference_id: #tee jotain 
+        try:
+            #todo: tagin validointi, virheiden käsittely
+            #validate_tag(tag_name)
+            link_tag_to_reference(tag_id, reference_id)
+            return redirect("/")
+        except Exception as error:
+            #tee jotain
+            return  redirect("/")
+
+
 
 
 # testausta varten oleva reitti

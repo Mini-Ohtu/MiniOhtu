@@ -4,17 +4,71 @@
 {% block body %}
 
 <h2>Edit BibTeX reference {{ viite.citekey }}</h2>
+<p>
+  <a href="/">Back</a>
+</p>
+
+
+
+<!-- tägin lisäys nyt tässä yĺhäällä jotta helpompi testailla, voi siirtää kun valmis  -->
+<h3>Add tag to {{ viite.citekey }}</h3>
+
+<p>
+  {% if reftags %}
+  Viitteen {{viite.citekey}} tagit:
+  {% for tag in reftags %}
+<p> {{ tag.tag_name }}</p>
+{% endfor %}
+{% else %}
+Ei tägejä.
+{% endif %}
+
+<!-- nyt uuden tägin luonti templaten avulla, luulisi että se on ihan ok -->
+<!-- hahmottelin myös että vain lisäisi sen pudotusvalikkoon, ks. alla-->
+
+<p>
+  <a href="{{ url_for('adding_tag', key=viite.citekey) }}">Luo uusi tägi</a>
+</p>
+
+{% if tags %}
+
+<body>
+  <form method="POST" action="{{ url_for('adding_tag', key=viite.citekey) }}">
+    <label for="tag">Valitse tägi:</label>
+    <select name="tag_name" id="tag">
+      {% for tag in tags %}
+
+      <option value="{{tag.tag_name}}">{{tag.tag_name}}</option>
+      {% endfor %}
+      <!-- pudotusvalikkoon mahdollisuus kirjoittaa uusi tägi?-->
+      <!-- <option value="other">Add a new tag</option> -->
+    </select>
+    <!--
+    <input type="text" id="newtag" name="new_tag" placeholder="Write your own option">
+      -->
+    <button type="submit">Submit</button>
+  </form>
+  {% endif %}
+
+</body>
+
+
+
+
+
+
+
 <p>Fields marked * are required for this type ({{ viite.entry_type }}).</p>
 
 <form action="{{ url_for('edit_reference', key=viite.citekey) }}" method="POST">
   <p>
     Type:<br>
     {% for type in field_map.keys() %}
-      <label>
-        <input type="radio" name="entry_type" value="{{ type }}" id="entry_type_{{ type }}"
-               {% if viite.entry_type == type %}checked{% endif %} disabled>
-        {{ type.capitalize() }}
-      </label>
+    <label>
+      <input type="radio" name="entry_type" value="{{ type }}" id="entry_type_{{ type }}" {% if viite.entry_type==type
+        %}checked{% endif %} disabled>
+      {{ type.capitalize() }}
+    </label>
     {% endfor %}
     <input type="hidden" name="entry_type" value="{{ viite.entry_type }}">
   </p>
@@ -35,11 +89,11 @@
 </form>
 
 {% if success_message %}
-  <p style="margin-top: 1rem; color: green;">{{ success_message }}</p>
+<p style="margin-top: 1rem; color: green;">{{ success_message }}</p>
 {% endif %}
 
 {% if error_message %}
-  <p style="margin-top: 1rem; color: red;">{{ error_message }}</p>
+<p style="margin-top: 1rem; color: red;">{{ error_message }}</p>
 {% endif %}
 
 <script>

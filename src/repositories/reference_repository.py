@@ -159,3 +159,102 @@ def get_reference_by_key(citekey):
         payload = {}
 
     return Reference(citekey, entry_type, payload)
+
+
+
+#tägien lisäys
+   
+def add_tag(tag_name):
+    """Hakee tagin id:n tag_namen perusteella tai luo uuden tagin ja palauttaa sen id:n"""
+    sql = text("SELECT id FROM tags WHERE tag_name = :tag_name")
+    result = db.session.execute(
+        sql,
+        {
+            "tag_name": tag_name,
+        },
+    )
+    tag_id = result.fetchone()
+    if tag_id:
+        return tag_id[0]
+
+    sql = text("""
+        INSERT INTO tags (tag_name) 
+        VALUES (:tag_name) 
+        ON CONFLICT (tag_name) DO NOTHING
+        RETURNING id
+    """)
+    result = db.session.execute(
+        sql,
+        {
+            "tag_name": tag_name,
+        },
+    )
+    tag_id = result.fetchone()
+    if tag_id:
+        return tag_id[0]
+
+def link_tag_to_reference(tag_id, reference_id):
+    """Lisää tagin viitteeseen, jollei sitä ole jo lisätty."""
+    sql = text("SELECT 1 FROM tag_references WHERE tag_id = :tag_id AND reference_id = :reference_id")
+    result = db.session.execute(
+        sql,
+        {
+            "tag_id": tag_id,
+            "reference_id": reference_id,
+        },
+    )
+    row = result.fetchone()
+    if row:
+        return False
+
+    sql = text("""
+        INSERT INTO tag_references (tag_id, reference_id) 
+        VALUES (:tag_id, :reference_id) 
+        ON CONFLICT DO NOTHING
+    """)
+    db.session.execute(
+        sql,
+        {
+            "tag_id": tag_id,
+            "reference_id": reference_id,
+        },
+    )
+    db.session.commit()
+    return True
+
+def get_all_tags():
+    """Hakee kaikki tagit."""
+    result = db.session.execute(
+        text("SELECT tag_name FROM tags")
+    )
+    tags = result.fetchall()
+    return tags
+
+def get_tags_by_reference(reference_id):
+    """Hakee kaikki viitteen tagit."""
+    sql = text("""
+        SELECT tag_name
+        FROM tags
+        JOIN tag_references ON tags.id = tag_references.tag_id
+        WHERE tag_references.reference_id = :reference_id;
+        """)
+    result = db.session.execute(
+        sql,
+        {
+            "reference_id": reference_id
+        },
+    )
+    tags_by_reference = result.fetchall()
+    return tags_by_reference
+
+def get_reference_id(citekey):
+    """Hakee viitteen id:n citekeyn perusteella."""
+    sql=text("SELECT id FROM bibtex_references WHERE citekey = :citekey")
+    result = db.session.execute(
+        sql,
+        {
+            "citekey": citekey
+        },
+    )   
+    reference_id = result.fetchone()[0]
+    return reference_id
