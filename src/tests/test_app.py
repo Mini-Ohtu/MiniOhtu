@@ -95,3 +95,16 @@ class AppTests(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(updated_storage["author"], "NewA")
         self.assertEqual(updated_storage["publisher"], "NewP")
+
+    def test_new_reference_prefills_from_doi(self):
+        parsed = {
+            "citekey": "Watson_1953",
+            "entry_type": "article",
+            "data": {"title": "Molecular Structure", "year": 1953},
+        }
+        with patch("app.fetch_reference_from_doi", return_value=parsed) as fetch_mock:
+            resp = self.client.get("/new_reference?doi=10.1038/nature123")
+
+        self.assertEqual(resp.status_code, 200)
+        fetch_mock.assert_called_once()
+        self.assertIn(b"Watson_1953", resp.data)
