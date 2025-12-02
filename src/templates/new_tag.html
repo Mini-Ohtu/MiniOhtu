@@ -3,15 +3,27 @@
 
 {% block body %}
 
-<h2>Luo uusi tagi</h2>
+<h2>Create new tag</h2>
 <body>
-      <form method="POST" action="{{ url_for('adding_tag', key=viite.citekey) }}">
+      <form method="POST" action="{{ url_for('add_tag_only') }}">
     <p>
-      Anna tagin nimi:
+      Enter tag name:
       <input type="text" name="tag_name" />
     </p>
-    <input type="submit" value="Lähetä" />
-  </form>
+    <p>
+    <input type="submit" value="Submit" />
+    <a href="/">Back</a>
+    
+    </p>
+</form>
+    
+    <h2>Tags added:</h2>
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag.tag_name }}</li>
+        {% endfor %}
+    </ul>
+
 </body>
 
 

@@ -15,7 +15,7 @@ def get_references() -> list:
     references = result.fetchall()
 
     if not references:
-        return "Ei viitteitä"
+        return "No references"
 
     parsed_references = []
     for citekey, entry_type, data in references:
@@ -160,10 +160,8 @@ def get_reference_by_key(citekey):
 
     return Reference(citekey, entry_type, payload)
 
-
-
 #tägien lisäys
-   
+
 def add_tag(tag_name):
     """Hakee tagin id:n tag_namen perusteella tai luo uuden tagin ja palauttaa sen id:n"""
     sql = text("SELECT id FROM tags WHERE tag_name = :tag_name")
@@ -189,6 +187,7 @@ def add_tag(tag_name):
             "tag_name": tag_name,
         },
     )
+    db.session.commit()
     tag_id = result.fetchone()
     if tag_id:
         return tag_id[0]
@@ -255,6 +254,6 @@ def get_reference_id(citekey):
         {
             "citekey": citekey
         },
-    )   
+    )
     reference_id = result.fetchone()[0]
     return reference_id

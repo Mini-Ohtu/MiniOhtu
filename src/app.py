@@ -97,12 +97,12 @@ def reference_creation():
 def edit_reference(key):
     viite = get_reference_by_key(key)
     if viite is None:
-        return "Reference not found", 404 
+        return "Reference not found", 404
     if request.method == "GET":
         #huom. lisätty tag-metodeja
         tags=get_all_tags()
         ref_id=get_reference_id(key)
-        reftags = get_tags_by_reference(ref_id) 
+        reftags = get_tags_by_reference(ref_id)
         return render_template(
             "edit_reference.html",
             viite=viite,
@@ -157,26 +157,20 @@ def reference_deletion(key):
     delete_reference(key)
     return redirect("/")
 
+#tagin lisäys
 
-
-#tägin lisäys 
-# huom. tägin lisäysmahdollisuus nyt vain muokkauksessa 
-# pitäisikö olla myös uuden viitteen lisäyksessä?
-
-@app.route("/add_tag/<key>", methods=["GET", "POST"]) 
+@app.route("/add_tag/<key>", methods=["GET", "POST"])
 def adding_tag(key):
     viite = get_reference_by_key(key)
     if request.method == "GET":
         return render_template("new_tag.html", viite=viite)
     if request.method == "POST":
         tag_name = request.form["tag_name"]
-        #olisiko parempi laittaa pudotusvalikkoon mahdollisuus kirjoittaa uusi tägi? 
-        # nyt on siis templates/new_tag.html
-        #if tag_name == "other":
-        #    tag_name = request.form["new_tag"]       
-        tag_id=add_tag(tag_name)
+        #olisiko parempi laittaa pudotusvalikkoon mahdollisuus kirjoittaa uusi tägi?
+        #luulen että on ok, että niitä lisää erikseen > tarve kuitenkin harvinainen
+        add_tag(tag_name)
         reference_id=get_reference_id(key)
-        #todo: if not tag_name or not tag_id or not reference_id: #tee jotain 
+        #todo: if not tag_name or not tag_id or not reference_id:
         try:
             #todo: tagin validointi, virheiden käsittely
             #validate_tag(tag_name)
@@ -186,8 +180,22 @@ def adding_tag(key):
             #tee jotain
             return  redirect("/")
 
+# Pelkkä tägin luonti ilman linkkiä citekeyhin
 
-
+@app.route("/new_tag", methods=["GET", "POST"])
+def add_tag_only():
+    tags = get_all_tags()
+    if request.method == "GET":
+        return render_template("new_tag.html", tags=tags)
+    if request.method == "POST":
+        tag_name = request.form["tag_name"]
+        try:
+            add_tag(tag_name)
+            return redirect(url_for("add_tag_only"))
+        # pylint: disable=W0703
+        except Exception as error:
+            query = urlencode({"error": str(error)})
+            return redirect(f"{url_for('add_tag_only')}?{query}")
 
 # testausta varten oleva reitti
 if test_env:
