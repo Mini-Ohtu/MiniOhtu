@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 from flask import redirect, render_template, request, jsonify, url_for
-from db_helper import reset_db
+from db_helper import populate_the_db, reset_db
 from repositories.reference_repository import (
     delete_reference,
     create_references,
@@ -42,6 +42,15 @@ def index():
     references: list = get_filtered_references(request.args)
     return render_template("index.html", references=references)
 
+@app.route("/pdb")
+def populate_database():
+    try:
+        populate_the_db()
+    # pylint: disable=broad-except
+    except Exception:
+        print("All good, you just had the things already :) hopefully.")
+    return redirect(url_for("index"))
+
 
 @app.route("/new_reference")
 def new():
@@ -79,6 +88,9 @@ def reference_creation():
             if value is not None:
                 data[field_name] = value
 
+        print(f"citekey: {citekey}")
+        print(f"entry_type: {entry_type}")
+        print(f"data: {data}")
         create_references(citekey, entry_type, data)
         return redirect(url_for("new", created="true"))
 

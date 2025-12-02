@@ -6,6 +6,7 @@ ${SERVER}     localhost:5001
 ${DELAY}      0.5 seconds
 ${HOME_URL}   http://${SERVER}
 ${RESET_URL}  http://${SERVER}/reset_db
+${POPULATE_DB_URL}  http://${SERVER}/pdb
 ${BROWSER}    chrome
 ${HEADLESS}   false
 
