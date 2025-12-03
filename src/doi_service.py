@@ -16,7 +16,8 @@ def _normalize_doi(doi: str) -> str:
     cleaned = (doi or "").strip()
     for prefix in ("https://doi.org/", "http://doi.org/", "doi.org/"):
         if cleaned.lower().startswith(prefix):
-            cleaned = cleaned[len(prefix) :]
+            cleaned = cleaned[len(prefix):]
+            break
     if not cleaned:
         raise DoiServiceError("DOI is required")
     return cleaned
@@ -40,14 +41,11 @@ def _coerce_value(value: str):
     cleaned = value.strip().strip(",")
     if cleaned.startswith("{") and cleaned.endswith("}"):
         cleaned = cleaned[1:-1]
-    if cleaned.startswith('"') and cleaned.endswith('"'):
+    elif cleaned.startswith('"') and cleaned.endswith('"'):
         cleaned = cleaned[1:-1]
-    digit_str = cleaned.strip()
-    if digit_str.isdigit():
-        try:
-            return int(digit_str)
-        except ValueError:
-            return cleaned
+    cleaned = cleaned.strip()
+    if cleaned.isdigit():
+        return int(cleaned)
     return cleaned
 
 
@@ -58,7 +56,7 @@ def _parse_header(bibtex: str) -> Tuple[str, str, str]:
         raise DoiServiceError("Could not parse BibTeX header")
     entry_type = match.group(1).strip().lower()
     citekey = match.group(2).strip()
-    remainder = bibtex[match.end() :]
+    remainder = bibtex[match.end():]
     return entry_type, citekey, remainder
 
 
@@ -72,7 +70,7 @@ def _split_fields(body: str):
     for ch in body:
         if ch == '"' and brace_depth == 0:
             in_quote = not in_quote
-        if ch == "{" and not in_quote:
+        elif ch == "{" and not in_quote:
             brace_depth += 1
         elif ch == "}" and not in_quote and brace_depth > 0:
             brace_depth -= 1
