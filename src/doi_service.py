@@ -5,6 +5,7 @@ import requests
 
 DOI_BASE_URL = "https://doi.org/"
 ACCEPT_HEADER = "application/x-bibtex"
+HEADER_RE = re.compile(r"@\s*([A-Za-z0-9_]+)\s*{\s*([^,\s]+)\s*,", re.DOTALL)
 
 
 class DoiServiceError(Exception):
@@ -14,7 +15,7 @@ class DoiServiceError(Exception):
 def _normalize_doi(doi: str) -> str:
     """Return DOI without protocol or host prefixes."""
     cleaned = (doi or "").strip()
-    for prefix in ("https://doi.org/", "http://doi.org/", "doi.org/"):
+    for prefix in ("https://doi.org/", "doi.org/"):
         if cleaned.lower().startswith(prefix):
             cleaned = cleaned[len(prefix):]
             break
@@ -51,13 +52,17 @@ def _coerce_value(value: str):
 
 
 def _parse_header(bibtex: str) -> Tuple[str, str, str]:
-    """Parse entry type and citekey; returns (entry_type, citekey, remainder)."""
-    match = re.search(r"@\s*(\w+)\s*{\s*([^,]+)\s*,", bibtex, re.DOTALL)
+    """Parse entry type and citekey. returns (entry_type, citekey, remainder).
+    Uses an anchored regex with simple, non-nested quantifiers to avoid
+    catastrophic backtracking.
+    """
+    text = (bibtex or "").lstrip()
+    match = HEADER_RE.match(text)
     if not match:
         raise DoiServiceError("Could not parse BibTeX header")
-    entry_type = match.group(1).strip().lower()
+    entry_type = match.group(1).lower()
     citekey = match.group(2).strip()
-    remainder = bibtex[match.end():]
+    remainder = text[match.end() :]
     return entry_type, citekey, remainder
 
 
@@ -73,7 +78,7 @@ def _split_fields(body: str):
         if segment:
             parts.append(segment)
         buf.clear()
-        
+
     for ch in body:
         if ch == '"' and brace_depth == 0:
             in_quote = not in_quote
