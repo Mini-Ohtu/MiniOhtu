@@ -95,6 +95,7 @@ Tag can be saved to reference
     Input Text  title  Article Title
     Input Text  year  2023
     Input Text  publisher  Book Publisher
+    Wait Until Element Is Visible   id:tag
     Input Text  tag  Lukematta
     Click Save Button
     Wait Until Page Contains  Reference added
