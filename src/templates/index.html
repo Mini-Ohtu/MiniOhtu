@@ -6,36 +6,47 @@ Reference app
 
 {% block body %}
 
+<div class="text-center mb-3">
 <h2>Reference App</h2>
-
-<div>
-  <a href="{{ url_for('new') }}">Create new reference</a>
 </div>
 
-<div class="mb-3 d-flex gap-2 align-items-end">
-  <form method="get" class="d-flex gap-2 mb-0">
+<div class="d-flex justify-content-center mb-3">
+  <a href="{{ url_for('new') }}" class="btn btn-primary btn-lg w-auto">Create new reference</a>
+</div>
+
+<div class="mb-3 d-flex gap-2 justify-content-center">
+  <form method="get" class="d-flex gap-2">
     <input
       type="text"
       name="ref"
       placeholder="Search references"
       class="form-control"
       value="{{ request.args.get('ref', '') }}"
+      style="max-width: 300px;"
     />
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
-  <form method="get" class="mb-0">
+  <form method="get">
     <button type="submit" class="btn btn-secondary">Show all</button>
   </form>
 </div>
 
 {% if references is string %}
-  <p>{{ references }}</p>
+  <div class="reference-card text-center">
+    <h5 class="mt-2">{{ references }}</h5>
+  </div>
 
 {% else %}
-
 {% for ref in references %}
-<div class="d-flex align-items-start gap-3">
+<div class="reference-card">
+   <div class="d-flex gap-2 justify-content-between mb-2">
+    <h3 class="mt-2 flex-grow-1">{{ ref.citekey }}</h3>
+    <form method="POST" action="/delete_reference/{{ ref.citekey }}">
+      <button class="mt-2 btn btn-danger" type="submit">Delete</button>
+    </form>
+      <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+  </div>
   <pre>
   @{{ ref.entry_type }}{ {{ ref.citekey }},
 {% for field, value in ref.data.items() %}
@@ -43,15 +54,7 @@ Reference app
 {% endfor %}
   }
   </pre>
-
-  <div class="d-flex flex-column gap-1">
-    <form method="POST" action="/delete_reference/{{ ref.citekey }}">
-      <button class="mt-2" type="submit">Delete</button>
-    </form>
-      <button class="mt-2" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
-  </div>
 </div>
-
 {% endfor %}
 {% endif %}
 {% endblock %}
