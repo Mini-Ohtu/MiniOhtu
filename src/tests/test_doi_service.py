@@ -7,6 +7,8 @@ from doi_service import (
     parse_bibtex_entry,
 )
 
+# pylint: disable=too-few-public-methods
+
 
 SAMPLE_BIBTEX = """@article{Watson_1953,
     doi = {10.1038/nature123},
@@ -72,16 +74,25 @@ class DoiServiceTests(unittest.TestCase):
     def test_parse_handles_single_line_with_commas(self):
         inline = (
             "@article{Watson_1953,"
-            " title={Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid},"
-            " volume={171}, ISSN={1476-4687}, url={http://dx.doi.org/10.1038/171737a0},"
+            " title={Molecular Structure of Nucleic Acids: A Structure for"
+            " Deoxyribose Nucleic Acid},"
+            " volume={171}, ISSN={1476-4687},"
+            " url={http://dx.doi.org/10.1038/171737a0},"
             " DOI={10.1038/171737a0}, number={4356}, journal={Nature},"
             " publisher={Springer Science and Business Media LLC},"
-            " author={WATSON, J. D. and CRICK, F. H. C.}, year={1953}, month=apr, pages={737–738}"
+            " author={WATSON, J. D. and CRICK, F. H. C.}, year={1953},"
+            " month=apr, pages={737–738}"
             "}"
         )
         parsed = parse_bibtex_entry(inline)
         data = parsed["data"]
-        self.assertEqual(data["title"], "Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid")
+        self.assertEqual(
+            data["title"],
+            (
+                "Molecular Structure of Nucleic Acids: A Structure for Deoxyribose "
+                "Nucleic Acid"
+            ),
+        )
         self.assertEqual(data["doi"], "10.1038/171737a0")
         self.assertEqual(data["year"], 1953)
         self.assertEqual(data["number"], 4356)
