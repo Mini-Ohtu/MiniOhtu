@@ -1,42 +1,48 @@
 {% extends "layout.html" %}
 
 {% block body %}
+<div class="text-center mb-3">
 <h2>Add BibTeX reference</h2>
 <p>Select type and fill in the fields. Fields marked * are required for the chosen type.</p>
+</div>
 
-<form action="/create_references" method="POST">
-  <p>
+<div class="card mb-3 reference-card mx-auto">
+<form action="/create_references" method="POST" >
     Type:<br>
+    <div class="mb-2">
     {% for type in field_map.keys() %}
       <label>
         <input type="radio" name="entry_type" value="{{ type }}" id="entry_type_{{ type }}" {% if loop.first %}checked{% endif %}>
         {{ type.capitalize() }}
       </label>
     {% endfor %}
-  </p>
+    </div>
+  
+  <div class="d-flex justify-content-between mb-2">
+  <h3 id="type-heading" class="flex-grow-1">Book</h3>
 
-  <h3 id="type-heading">Book</h3>
+  <button class="btn btn-success me-2" type="submit">Save</button>
+  <a href="/" class="btn btn-secondary">Back</a>
+  </div>
 
-  <p>
-    <label for="citekey">CiteKey *</label><br>
-    <input type="text" name="citekey" id="citekey" required>
-  </p>
-
-  <div id="fields-container"></div>
-
-  <p>
-    <button type="submit">Save</button>
-    <a href="/">Back</a>
-  </p>
-</form>
-
-{% if reference_created %}
+  {% if reference_created %}
   <p style="color: green;">Reference added</p>
 {% endif %}
 
 {% if error_message %}
   <p style="color: red;">{{ error_message }}</p>
 {% endif %}
+
+
+  <p>
+    <label for="citekey">CiteKey *</label><br>
+    <input class="form-control" type="text" name="citekey" id="citekey" required>
+  </p>
+
+  <div id="fields-container"></div>
+
+</form>
+</div>
 
 <script>
   window.FIELD_MAP = {{ field_map | tojson }};

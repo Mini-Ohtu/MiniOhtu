@@ -30,8 +30,8 @@ function renderFields(type) {
           ? ` value="${String(existingData[field.name])}"`
           : "";
       return (
-        `<p><label for="${field.name}">${toLabel(field.name, field.required)}</label><br>` +
-        `<input type="text" id="${field.name}" name="${field.name}"${valueAttr} ${
+        `<p><label for="${field.name}">${toLabel(field.name, field.required)}</label>` +
+        `<input class="form-control" type="text" id="${field.name}" name="${field.name}"${valueAttr} ${
           field.required ? "required" : ""
         }></p>`
       );
