@@ -39,9 +39,10 @@ def fetch_bibtex(doi: str) -> str:
 def _coerce_value(value: str):
     """Strip wrapping quotes/braces and cast numeric strings to int."""
     cleaned = value.strip().strip(",")
-    if cleaned.startswith("{") and cleaned.endswith("}"):
-        cleaned = cleaned[1:-1]
-    elif cleaned.startswith('"') and cleaned.endswith('"'):
+    if (
+        (cleaned.startswith("{") and cleaned.endswith("}"))
+        or (cleaned.startswith('"') and cleaned.endswith('"'))
+    ):
         cleaned = cleaned[1:-1]
     cleaned = cleaned.strip()
     if cleaned.isdigit():
@@ -67,25 +68,26 @@ def _split_fields(body: str):
     brace_depth = 0
     in_quote = False
 
+    def flush():
+        segment = "".join(buf).strip().rstrip(",")
+        if segment:
+            parts.append(segment)
+        buf.clear()
+        
     for ch in body:
         if ch == '"' and brace_depth == 0:
             in_quote = not in_quote
-        elif ch == "{" and not in_quote:
-            brace_depth += 1
-        elif ch == "}" and not in_quote and brace_depth > 0:
-            brace_depth -= 1
-
+        elif not in_quote:
+            if ch == "{":
+                brace_depth += 1
+            elif ch == "}" and brace_depth > 0:
+                brace_depth -= 1
         if ch == "," and brace_depth == 0 and not in_quote:
-            segment = "".join(buf).strip()
-            if segment:
-                parts.append(segment)
-            buf = []
-        else:
-            buf.append(ch)
+            flush()
+            continue
 
-    tail = "".join(buf).strip().rstrip(",")
-    if tail:
-        parts.append(tail)
+        buf.append(ch)
+    flush()
     return parts
 
 
