@@ -81,7 +81,7 @@ class DoiServiceTests(unittest.TestCase):
             " DOI={10.1038/171737a0}, number={4356}, journal={Nature},"
             " publisher={Springer Science and Business Media LLC},"
             " author={WATSON, J. D. and CRICK, F. H. C.}, year={1953},"
-            " month=apr, pages={737–738}"
+            " month=apr, pages={737--738}"
             "}"
         )
         parsed = parse_bibtex_entry(inline)
