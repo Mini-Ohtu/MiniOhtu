@@ -42,7 +42,7 @@ Reference app
 <div class="reference-card">
    <div class="d-flex gap-2 justify-content-between mb-2">
     <h3 class="mt-2 flex-grow-1">{{ ref.citekey }}</h3>
-    <form method="POST" action="/delete_reference/{{ ref.citekey }}">
+    <form method="POST" action="/delete_reference/{{ ref.citekey }}" onsubmit="return confirm('Are you sure you want to delete this reference?');">
       <button class="mt-2 btn btn-danger" type="submit">Delete</button>
     </form>
       <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
