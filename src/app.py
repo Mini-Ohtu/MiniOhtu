@@ -13,7 +13,8 @@ from repositories.reference_repository import (
     get_tags_not_in_reference,
     get_tag_by_id,
     create_tag,
-    add_tag_to_reference
+    add_tag_to_reference,
+    get_filtered_references_with_tag
 )
 from config import app, test_env
 from doi_service import fetch_reference_from_doi, DoiServiceError
@@ -225,7 +226,7 @@ def add_tag_only():
 @app.route("/show_tag_references/<tag_id>", methods=["GET", "POST"])
 def show_tag_references(tag_id):
     tag = get_tag_by_id(tag_id)
-    references: list = get_filtered_references(request.args, tag_id)
+    references: list = get_filtered_references_with_tag(request.args, tag_id)
     return render_template("tags_references.html", references=references, tag=tag)
 
 

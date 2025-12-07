@@ -39,11 +39,8 @@ def get_references() -> list:
     return parsed_references
 
 
-def get_filtered_references(args: MultiDict[str, str], tag_id=None) -> list:
-    if not tag_id:
-        result_list = get_references()
-    else:
-        result_list = get_references_with_tag(tag_id)
+def get_filtered_references(args: MultiDict[str, str]) -> list:
+    result_list = get_references()
 
     if len(args) == 0 or not isinstance(result_list, list):
         return result_list
@@ -294,7 +291,7 @@ def get_tags_not_in_reference(reference_id):
     return references_by_tag
 
 def get_references_with_tag(tag_id) -> list:
-    """Hakee kaikki viitteet, joihin on lisätty kyseinen tagi"""
+    """Hakee kaikki viitteet, joihin on lisätty kyseinen tagi."""
     sql = text("""
         SELECT citekey, entry_type, data
         FROM bibtex_references br
@@ -332,3 +329,28 @@ def get_references_with_tag(tag_id) -> list:
         )
 
     return parsed_references
+
+def get_filtered_references_with_tag(args: MultiDict[str, str], tag_id=None) -> list:
+    result_list = get_references_with_tag(tag_id)
+
+    if len(args) == 0 or not isinstance(result_list, list):
+        return result_list
+
+    for key, value in args.items(multi=True):
+        holder = []
+        for result in result_list:
+            search = ""
+            if hasattr(result, key):
+                search = str(getattr(result, key))
+            else:
+                search = str(result)
+            string_result = re.findall(value, search)
+            if len(string_result) > 0:
+                holder.append(result)
+
+        result_list = holder
+
+    if len(result_list) < 1:
+        return "Ei viitteitä haussa/filterillä."
+
+    return result_list
