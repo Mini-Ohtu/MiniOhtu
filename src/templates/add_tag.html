@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<h2>Add tag to ref {{ ref.citekey }}</h2>
+
+<a href="/" class="btn btn-secondary">Back</a>
+
+{% if ref %}
+<div class="reference-card">
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">{{ ref.citekey }}</h3>
+    </div>
+    <pre>
+  @{{ ref.entry_type }}{ {{ ref.citekey }},
+{% for field, value in ref.data.items() %}
+    {{ field }} = { {{ value }} }{% if not loop.last %},{% endif %}
+{% endfor %}
+  }
+  </pre>
+</div>
+{% endif %}
+<br>
+<p>
+    {% if ref_tags %}
+    Tags added to reference {{ref.citekey }}:
+    {% for tag in ref_tags %}
+    <li>{{ tag.tag_name }}</li>
+
+    {% endfor %}
+    {% endif %}
+    <br>
+    {% if tags_left %}
+
+    <body>
+        <form method="POST" action="{{ url_for('adding_tag', key=ref.citekey) }}">
+            <select name="tag_name">
+                {% for tag in tags_left %}
+                <option value="{{ tag.tag_name }}">{{tag.tag_name}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+        {% else %}
+        No tags to add.
+        <p>
+            <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
+        </p>
+        {% endif %}
+    </body>
+
+    {% endblock %}

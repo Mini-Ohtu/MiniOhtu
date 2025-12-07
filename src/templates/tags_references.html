@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% if not references%}
+<h2>No references with tag {{ tag.tag_name }}</h2>
+<a href="/" class="btn btn-secondary">Back</a>
+
+{% else %}
+
+<h2>References with tag {{ tag.tag_name }}</h2>
+
+<a href="/" class="btn btn-secondary">Back</a>
+
+<div class="mb-3 d-flex gap-2 justify-content-center">
+    <form method="get" class="d-flex gap-2">
+        <input type="text" name="ref" placeholder="Search references" class="form-control"
+            value="{{ request.args.get('ref', '') }}" style="max-width: 300px;" />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <form method="get">
+        <button type="submit" class="btn btn-secondary">Show all</button>
+    </form>
+</div>
+
+{% if references is string %}
+<div class="reference-card text-center">
+    <h5 class="mt-2">{{ references }}</h5>
+</div>
+
+{% else %}
+{% for ref in references %}
+<div class="reference-card">
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">{{ ref.citekey }}</h3>
+    </div>
+    <pre>
+  @{{ ref.entry_type }}{ {{ ref.citekey }},
+{% for field, value in ref.data.items() %}
+    {{ field }} = { {{ value }} }{% if not loop.last %},{% endif %}
+{% endfor %}
+  }
+  </pre>
+</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endblock %}

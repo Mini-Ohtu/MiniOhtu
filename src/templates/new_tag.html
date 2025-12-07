@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h2>Create a new tag</h2>
+
+<body>
+    <form method="POST" action="{{ url_for('add_tag_only') }}">
+        <p>
+            Enter tag name:
+            <input type="text" name="tag_name" />
+            <input type="submit" value="Submit" />
+        </p>
+    </form>
+    <br>
+    <a href="/" class="btn btn-secondary">Back</a>
+
+    {% if tags %}
+    <h2>Tags:</h2>
+    <ul>
+        {% for tag in tags %}
+        <li>{{ tag.tag_name }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+
+
+{% endblock %}
