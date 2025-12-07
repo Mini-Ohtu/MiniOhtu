@@ -71,7 +71,7 @@ def new():
         error_message = doi_error
 
     return render_template(
-        "new_book.html",
+        "new_reference.html",
         reference_created=created,
         error_message=error_message,
         field_map=BIBTEX_FIELDS,
