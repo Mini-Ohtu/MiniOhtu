@@ -2,15 +2,16 @@
 
 
 {% block body %}
-
+<div class="text-center"
 <h2>Edit BibTeX reference {{ viite.citekey }}</h2>
-<p>
-  <a href="/">Back</a>
-</p>
+</div>
 
+<div class="text-center">
 <p>Fields marked * are required for this type ({{ viite.entry_type }}).</p>
+</div>
 
 <form action="{{ url_for('edit_reference', key=viite.citekey) }}" method="POST">
+  <div class="d-flex justify-content-center">
   <p>
     Type:<br>
     {% for type in field_map.keys() %}
@@ -22,9 +23,22 @@
     {% endfor %}
     <input type="hidden" name="entry_type" value="{{ viite.entry_type }}">
   </p>
+  </div>
 
-  <h3 id="type-heading">{{ viite.entry_type.capitalize() }}</h3>
+  <div class="reference-card">
+    <div class="d-flex justify-content-between mt-2">
+    <h3 id="type-heading" class="flex-grow-1">{{ viite.entry_type.capitalize() }}</h3>
+  
+    <button class="btn btn-success me-2" type="submit">Save changes</button>
+    <a href="/" class="btn btn-secondary">Back</a>
+    </div>
+    {% if success_message %}
+      <p style="margin-top: 1rem; color: green;">{{ success_message }}</p>
+    {% endif %}
 
+    {% if error_message %}
+      <p style="margin-top: 1rem; color: red;">{{ error_message }}</p>
+    {% endif %}
   <p>
     <label for="citekey">CiteKey *</label><br>
     <input type="text" name="citekey" id="citekey" value="{{ viite.citekey }}" readonly>
@@ -32,10 +46,7 @@
 
   <div id="fields-container"></div>
 
-  <p>
-    <button type="submit">Save changes</button>
-    <a href="/">Back</a>
-  </p>
+</div>
 </form>
 </body>
 

@@ -14,6 +14,7 @@ from repositories.reference_repository import (
     get_reference_id
 )
 from config import app, test_env
+from doi_service import fetch_reference_from_doi, DoiServiceError
 from util import (
     validate_reference_title,
     validate_reference_year,
@@ -48,15 +49,39 @@ def index():
     return render_template("index.html", references=references)
 
 
+def _fetch_doi_prefill(doi_param):
+    """Fetch DOI data for prefill; return (existing_data, citekey, error)."""
+    if not doi_param:
+        return None, None, None
+    try:
+        parsed = fetch_reference_from_doi(doi_param)
+        existing_data = {
+            "entry_type": parsed.get("entry_type"),
+            "data": parsed.get("data") or {},
+        }
+        citekey_prefill = parsed.get("citekey")
+        return existing_data, citekey_prefill, None
+    except (UserInputError, DoiServiceError) as err:
+        return None, None, str(err)
+
+
 @app.route("/new_reference")
 def new():
     created = request.args.get("created") == "true"
     error_message = request.args.get("error")
+    existing_data, citekey_prefill, doi_error = _fetch_doi_prefill(
+        request.args.get("doi")
+    )
+    if doi_error:
+        error_message = doi_error
+
     return render_template(
         "new_book.html",
         reference_created=created,
         error_message=error_message,
         field_map=BIBTEX_FIELDS,
+        existing_data=existing_data,
+        citekey_prefill=citekey_prefill,
     )
 
 

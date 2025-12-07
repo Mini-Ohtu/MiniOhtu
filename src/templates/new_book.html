@@ -1,45 +1,72 @@
 {% extends "layout.html" %}
 
 {% block body %}
+<div class="text-center mb-3">
 <h2>Add BibTeX reference</h2>
 <p>Select type and fill in the fields. Fields marked * are required for the chosen type.</p>
+</div>
 
-<form action="/create_references" method="POST">
-  <p>
-    Type:<br>
-    {% for type in field_map.keys() %}
-      <label>
-        <input type="radio" name="entry_type" value="{{ type }}" id="entry_type_{{ type }}" {% if loop.first %}checked{% endif %}>
-        {{ type.capitalize() }}
-      </label>
-    {% endfor %}
-  </p>
+<div class="card mb-3 reference-card mx-auto">
+  <form class="mb-3 mt-3" method="GET" action="{{ url_for('new') }}">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        name="doi"
+        id="doi-input"
+        placeholder="https://doi.org/10.xxxx/xxxx"
+        value="{{ request.args.get('doi', '') }}"
+      >
+      <button class="btn btn-secondary" type="submit">Fill from DOI</button>
+    </div>
+  </form>
 
-  <h3 id="type-heading">Book</h3>
+  <form action="/create_references" method="POST">
+    <div class="mb-3">
+      <p class="mb-1">Type:</p>
+      <div class="mb-2">
+      {% for type in field_map.keys() %}
+        <label class="me-2">
+          <input
+            type="radio"
+            name="entry_type"
+            value="{{ type }}"
+            id="entry_type_{{ type }}"
+            {% if existing_data and existing_data.entry_type == type %}checked{% elif not existing_data and loop.first %}checked{% endif %}>
+          {{ type.capitalize() }}
+        </label>
+      {% endfor %}
+      </div>
+    </div>
+  
+  <div class="d-flex justify-content-between mb-2">
+  <h3 id="type-heading" class="flex-grow-1">Book</h3>
+
+  <button class="btn btn-success me-2" type="submit">Save</button>
+  <a href="/" class="btn btn-secondary">Back</a>
+  </div>
+
+  {% if reference_created %}
+  <p style="color: green;">Reference added</p>
+  {% endif %}
+
+  {% if error_message %}
+  <p style="color: red;">{{ error_message }}</p>
+  {% endif %}
 
   <p>
     <label for="citekey">CiteKey *</label><br>
-    <input type="text" name="citekey" id="citekey" required>
+    <input class="form-control" type="text" name="citekey" id="citekey" value="{{ citekey_prefill or '' }}" required>
   </p>
 
   <div id="fields-container"></div>
 
-  <p>
-    <button type="submit">Save</button>
-    <a href="/">Back</a>
-  </p>
 </form>
-
-{% if reference_created %}
-  <p style="color: green;">Reference added</p>
-{% endif %}
-
-{% if error_message %}
-  <p style="color: red;">{{ error_message }}</p>
-{% endif %}
+</div>
 
 <script>
   window.FIELD_MAP = {{ field_map | tojson }};
+  window.EXISTING_DATA = {{ existing_data | tojson }};
 </script>
 <script src="{{ url_for('static', filename='form_fields.js') }}"></script>
 {% endblock %}

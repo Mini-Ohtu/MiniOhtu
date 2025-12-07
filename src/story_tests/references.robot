@@ -85,4 +85,40 @@ Site does not show reference after deleting it
     Wait Until Page Contains  Reference added
     Go To  ${HOME_URL}
     Click Button  Delete
+    Handle Alert
     Page Should Not Contain  Book to delete
+
+Tag can be saved to reference
+    Go To  ${HOME_URL}
+    Click Link  Create new reference
+    Input Text  citekey  book-1
+    Input Text  author  Article Author
+    Input Text  title  Article Title
+    Input Text  year  2023
+    Input Text  publisher  Book Publisher
+    Wait Until Element Is Visible   id:tag
+    Scroll Element Into View         id:tag
+    Input Text  tag  Lukematta
+    Click Save Button
+    Wait Until Page Contains  Reference added
+    Go To  ${HOME_URL}
+    Wait Until Page Contains  @book{ book-1
+    Wait Until Page Contains  tag = { Lukematta }
+
+Deleting a reference shows confirmation alert
+    Go To  ${HOME_URL}
+    Click Link  Create new reference
+    Input Text  citekey  Smith2020
+    Input Text  author  John Smith
+    Input Text  title  Web development
+    Input Text  year  2020
+    Input Text  publisher  TechPress
+    Click Save Button
+    Wait Until Page Contains  Reference added
+    Go To  ${HOME_URL}
+    Wait Until Page Contains  @book{ Smith2020
+    Click Button  Delete
+    ${message} =  Handle Alert  LEAVE
+    Should Be Equal  ${message}  Are you sure you want to delete this reference?
+    Handle Alert
+    Page Should Not Contain  Smith2020
