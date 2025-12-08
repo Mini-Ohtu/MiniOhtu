@@ -25,29 +25,30 @@
 <p>
     {% if ref_tags %}
     Tags added to reference {{ref.citekey }}:
+<ul>
     {% for tag in ref_tags %}
     <li>{{ tag.tag_name }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<br>
+{% if tags_left %}
 
-    {% endfor %}
+<body>
+    <form method="POST" action="{{ url_for('adding_tag', key=ref.citekey) }}">
+        <select name="tag_name">
+            {% for tag in tags_left %}
+            <option value="{{ tag.tag_name }}">{{tag.tag_name}}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-success me-2" type="submit">Save</button>
+    </form>
+    {% else %}
+    No tags to add.
+    <p>
+        <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
+    </p>
     {% endif %}
-    <br>
-    {% if tags_left %}
+</body>
 
-    <body>
-        <form method="POST" action="{{ url_for('adding_tag', key=ref.citekey) }}">
-            <select name="tag_name">
-                {% for tag in tags_left %}
-                <option value="{{ tag.tag_name }}">{{tag.tag_name}}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Submit</button>
-        </form>
-        {% else %}
-        No tags to add.
-        <p>
-            <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
-        </p>
-        {% endif %}
-    </body>
-
-    {% endblock %}
+{% endblock %}
