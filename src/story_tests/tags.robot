@@ -8,7 +8,7 @@ Test Setup       Reset Database
 ${AUTHOR}    Test Author
 ${TITLE}     Test Title
 ${YEAR}      2024
-${PUBLISHER} Test Publisher
+${PUBLISHER}     Test Publisher
 
 *** Test Cases ***
 
@@ -16,7 +16,7 @@ Test Create New Tag
     Go To  ${HOME_URL}
     Click Link  Create a new tag
     Input Text  tag_name  unread
-    Click Submit Button
+    Click Save Button
     Click Link  Back
     Go To  ${HOME_URL}
     Wait Until Page Contains  unread
@@ -47,7 +47,7 @@ Test Attach Existing Tag To Reference
     Go To  ${HOME_URL}
     Click Link  Add tags
     Select From List By Label  id_tags  unread
-    Click Submit Button
+    Click Save Button
     Go To  ${HOME_URL}
     Wait Until Page Contains  @book{ book-1
     Wait Until Page Contains  tag = { unread }
