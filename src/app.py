@@ -13,8 +13,7 @@ from repositories.reference_repository import (
     get_tags_not_in_reference,
     get_tag_by_id,
     create_tag,
-    add_tag_to_reference,
-    get_filtered_references_with_tag
+    add_tag_to_reference
 )
 from config import app, test_env
 from doi_service import fetch_reference_from_doi, DoiServiceError
@@ -22,6 +21,7 @@ from util import (
     validate_reference_title,
     validate_reference_year,
     UserInputError,
+    validate_tag
 )
 from bibtex_fields import BIBTEX_FIELDS
 
@@ -187,8 +187,6 @@ def reference_deletion(key):
 @app.route("/add_tag/<key>", methods=["GET", "POST"])
 def adding_tag(key):
     ref = get_reference_by_key(key)
-    if ref is None:
-        return "Reference not found", 404
     reference_id = get_reference_id(key)
     if request.method == "GET":
         ref_tags = get_tags_by_reference(reference_id)
@@ -196,7 +194,6 @@ def adding_tag(key):
         return render_template("add_tag.html", ref=ref, ref_tags=ref_tags, tags_left=tags_left)
     if request.method == "POST":
         tag_name = request.form["tag_name"]
-        #errorin käsittely yms., tägin validointi
         tag_id=create_tag(tag_name)
         add_tag_to_reference(tag_id, reference_id)
         ref_tags = get_tags_by_reference(reference_id)
@@ -204,7 +201,6 @@ def adding_tag(key):
         return render_template("add_tag.html", ref=ref, ref_tags=ref_tags, tags_left=tags_left)
     return  redirect("/")
 
-# Pelkkä tägin luonti ilman linkkiä citekeyhin
 
 @app.route("/new_tag", methods=["GET", "POST"])
 def add_tag_only():
@@ -213,8 +209,8 @@ def add_tag_only():
         return render_template("new_tag.html", tags=tags)
     if request.method == "POST":
         tag_name = request.form["tag_name"]
-        # tägin validointi
         try:
+            validate_tag(tag_name)
             create_tag(tag_name)
             return redirect(url_for("add_tag_only"))
         # pylint: disable=W0703
@@ -226,7 +222,7 @@ def add_tag_only():
 @app.route("/show_tag_references/<tag_id>", methods=["GET", "POST"])
 def show_tag_references(tag_id):
     tag = get_tag_by_id(tag_id)
-    references: list = get_filtered_references_with_tag(request.args, tag_id)
+    references: list = get_filtered_references(request.args, tag_id)
     return render_template("tags_references.html", references=references, tag=tag)
 
 

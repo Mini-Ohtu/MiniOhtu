@@ -1,5 +1,5 @@
 import unittest
-from util import validate_reference_title, validate_reference_year, UserInputError
+from util import validate_reference_title, validate_reference_year, UserInputError, validate_tag
 from entities.reference import Reference
 
 class TestRerence(unittest.TestCase):
@@ -39,3 +39,13 @@ class TestRerence(unittest.TestCase):
     def test_optional_year_rejects_non_numeric(self):
         with self.assertRaises(UserInputError):
             validate_reference_year("not-a-number", required=False)
+
+    def test_too_short_or_long_tag_raises_error(self):
+        with self.assertRaises(UserInputError):
+            validate_tag("")
+
+        with self.assertRaises(UserInputError):
+            validate_tag("aa" * 20)
+
+    def test_valid_tag_does_not_raise_error(self):
+        validate_reference_title("tag-1")
