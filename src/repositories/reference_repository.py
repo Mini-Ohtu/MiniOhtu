@@ -39,7 +39,7 @@ def get_references() -> list:
     return parsed_references
 
 
-def get_filtered_references(args: MultiDict[str, str], tag_id=None) -> list:
+def get_filtered_references(args: MultiDict[str, str], tag_id = None) -> list:
     if not tag_id:
         result_list = get_references()
     else:
@@ -294,7 +294,7 @@ def get_tags_not_in_reference(reference_id):
     return references_by_tag
 
 def get_references_with_tag(tag_id) -> list:
-    """Hakee kaikki viitteet, joihin on lisätty kyseinen tagi"""
+    """Hakee kaikki viitteet, joihin on lisätty kyseinen tagi."""
     sql = text("""
         SELECT citekey, entry_type, data
         FROM bibtex_references br

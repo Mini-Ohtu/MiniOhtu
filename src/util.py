@@ -28,3 +28,11 @@ def validate_reference_year(year, required=True):
         return int(year_str)
     except ValueError:
         raise UserInputError("Year must be an integer")
+
+
+def validate_tag(tag_name):
+    if len(tag_name) == 0:
+        raise UserInputError("Tag length can't be 0")
+
+    if len(tag_name) > 20:
+        raise UserInputError("Tag length must be smaller than 1000")
