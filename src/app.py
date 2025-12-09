@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 from flask import redirect, render_template, request, jsonify, url_for
-from db_helper import reset_db
+from db_helper import populate_the_db, reset_db, setup_db
 from repositories.reference_repository import (
     delete_reference,
     create_references,
@@ -80,7 +80,7 @@ def new():
         error_message = doi_error
 
     return render_template(
-        "new_book.html",
+        "new_reference.html",
         reference_created=created,
         error_message=error_message,
         field_map=BIBTEX_FIELDS,
@@ -224,6 +224,44 @@ def show_tag_references(tag_id):
     tag = get_tag_by_id(tag_id)
     references: list = get_filtered_references(request.args, tag_id)
     return render_template("tags_references.html", references=references, tag=tag)
+
+
+@app.route("/populate")
+def populate_database():
+    try:
+        populate_the_db()
+    # pylint: disable=broad-except
+    except Exception:
+        print("All good, you just had the things already :) hopefully.")
+    return redirect(url_for("index"))
+
+
+@app.route("/setup")
+def set_up_the_db():
+    try:
+        setup_db()
+    # pylint: disable=broad-except
+    except Exception as error:
+        print("Set up did not work.")
+        print(f"Exception: {error}")
+    return redirect(url_for("index"))
+
+
+@app.route("/complete")
+def complete_setup():
+    try:
+        setup_db()
+    # pylint: disable=broad-except
+    except Exception as error:
+        print("Set up did not work.")
+        print(f"Exception: {error}")
+
+    try:
+        populate_the_db()
+    # pylint: disable=broad-except
+    except Exception:
+        print("All good, you just had the things already :) hopefully.")
+    return redirect(url_for("index"))
 
 
 # testausta varten oleva reitti

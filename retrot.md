@@ -1,3 +1,41 @@
+Retro sprintti 3 - 4.12.2025
+Työkaluna retrotool.app
+
+Works
+
+    Selvittiin taas yks sprintti
+    Mukava tiimi, yee yee!
+    Tuli hienoja uusia ominaisuuksia.
+    saatiin taas toimiva ja hyvän näköinen sovellus (vaikka asiakkaalta tulikin vähän ihmettelyä)
+    Demo meni hyvin kaikki kaikessa
+    Meijän sprintti processi toimii jo mukavasti
+    Saatiin toimiva sovellus kasaan
+    työskentelimme enintään 6 tuntia
+    Työaika, siinä pysyminen ja arviointi
+
+Improve
+
+    Työaika, siinä pysyminen ja arviointi
+    testeihin pitää varmaan panostaa nyt
+    Harmillinen demoon valmistautuis tilanne.
+    Demoon olisi voinut varautua paremmin
+    tarkista kaikki muutokset gittissa ennen näyttämistä
+    Joskus PR:t odottaa pitkään ja on epäselvää, kuka ne hyväksyisi, nyt releasesta jäi ns. turhaan uusi feature rannalle.
+    aikataulutusta voisi vähän parantaa ja sopia tarkemmin, milloin tehdään mitäkin
+    Oma koodausosaaminen tuntuu aika heikolta, koettakaa kestää..
+    Featurejen loppuun vienti
+
+Others
+
+    Olemmeko itseemme tyytyväisiä tähän mennessä?
+
+Action Items
+
+    Panostetaan testeihin, acceptance criteriat suoraan robot-testeihin ja linkataan ne hyväksymiskriteereihin.
+    Loput ominaisuudet valmiksi keskiviikon palaveriin, release ja demoharjoittelu samalla.
+
+---------------------------------------------------------------------------
+
 Retro sprintti 2 - 27.11.2025
 Työkaluna retrotool.app
 
