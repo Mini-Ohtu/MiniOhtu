@@ -3,6 +3,8 @@
 [![GHA workflow badge](https://github.com/Mini-Ohtu/MiniOhtu/actions/workflows/codelint.yaml/badge.svg)](https://github.com/Mini-Ohtu/MiniOhtu/actions)
 
 [![GHA workflow badge](https://github.com/Mini-Ohtu/MiniOhtu/actions/workflows/robot.yaml/badge.svg)](https://github.com/Mini-Ohtu/MiniOhtu/actions)
+  
+[![codecov](https://codecov.io/gh/Mini-Ohtu/MiniOhtu/graph/badge.svg?token=1B01LC5460)](https://codecov.io/gh/Mini-Ohtu/MiniOhtu)
 
  [Backlog](https://docs.google.com/spreadsheets/d/1Gf4uw0c0myjrpMIgQNJ6P5u_mz90s6L_LBdPb7gv93k/edit?usp=sharing)
 
