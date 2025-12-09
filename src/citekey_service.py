@@ -1,5 +1,5 @@
-import random
 import re
+import secrets
 from typing import Callable
 
 
@@ -69,8 +69,8 @@ def _random_significant_word(title: str) -> str:
     options = _significant_words(title)
     if not options:
         return ""
-    # Pseudorandomness is fine for citekey variety (not security-sensitive).
-    return random.choice(options)
+    # Use cryptographic choice to avoid linter warnings about PRNG usage.
+    return secrets.choice(options)
 
 
 def _normalize_year(year) -> str:
