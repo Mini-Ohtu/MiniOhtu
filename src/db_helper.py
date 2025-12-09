@@ -53,15 +53,56 @@ def setup_db():
         schema_sql = f.read().strip()
 
     if _db_backend() == "sqlite":
-        schema_sql = (
-            schema_sql.replace(
-                "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
-            )
-            .replace("JSON NOT NULL", "TEXT NOT NULL")
-        )
+        schema_sql = schema_sql.replace(
+            "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
+        ).replace("JSON NOT NULL", "TEXT NOT NULL")
 
     sql = text(schema_sql)
     db.session.execute(sql)
+    db.session.commit()
+
+
+def populate_the_db():
+    data = [
+        "fish1",
+        "book",
+        '{"author": "Lohi", "title": "Juttu asiaa", "year": 1006, '
+        + '"publisher": "Gold Publisher","tag": "Lukematta", "edition": "104,729"}',
+    ]
+    put_it_into_db(data)
+
+    data = [
+        "fish2",
+        "book",
+        '{"author": "Lohi", "title": "You know, the thing about rivers?", '
+        + '"year": 1998, "publisher": "Gold Publisher","tag": "Lukematta"}',
+    ]
+    put_it_into_db(data)
+
+    data = [
+        "fish3",
+        "book",
+        '{"author": "Lohi", "title": "Historian havinaa, muisteluja '
+        + 'vuosien varrelta", "year": 2023, "publisher": "Penguin Publisher",'
+        + '"volume": "999999999999", "address": "joki", "edition": "666"'
+        + ', "month": "6", "tag": "Lukematta"}',
+    ]
+    put_it_into_db(data)
+
+
+# pylint: disable=C0301
+def put_it_into_db(data):
+    sql = text(
+        "INSERT INTO bibtex_references (citekey, entry_type, data) VALUES (:citekey, :entry_type, :data)"
+    )
+    db.session.execute(
+        sql,
+        {
+            "citekey": data[0],
+            "entry_type": data[1],
+            "data": data[2],
+        },
+    )
     db.session.commit()
 
 
