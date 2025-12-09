@@ -1,5 +1,6 @@
 import os
 from sqlalchemy import text
+import sqlalchemy
 from config import db, app
 
 
@@ -11,7 +12,7 @@ def reset_db():
     print("Clearing contents from table bibtex_references")
     sql_references = text("DELETE FROM bibtex_references")
     db.session.execute(sql_references)
-    
+
     print("Clearing contents from table tags")
     sql_tags = text("DELETE FROM tags")
     db.session.execute(sql_tags)
@@ -50,7 +51,10 @@ def setup_db():
     if len(tables_in_db) > 0:
         print(f"Tables exist, dropping: {', '.join(tables_in_db)}")
         for table in tables_in_db:
-            sql = text(f"DROP TABLE {table} CASCADE")
+            drop_table = (
+                f"DROP TABLE {table}" + " CASCADE" if _db_backend() != "sqlite" else ""
+            )
+            sql = text(drop_table)
             db.session.execute(sql)
         db.session.commit()
 
@@ -62,16 +66,19 @@ def setup_db():
         schema_sql = f.read().strip()
 
     if _db_backend() == "sqlite":
-        schema_sql = (
-            schema_sql.replace(
-                "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
-            )
-            .replace("JSON NOT NULL", "TEXT NOT NULL")
-        )
+        schema_sql = schema_sql.replace(
+            "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
+        ).replace("JSON NOT NULL", "TEXT NOT NULL")
 
-    sql = text(schema_sql)
-    db.session.execute(sql)
-    db.session.commit()
+    statements = schema_sql.split(";")
+    for state in statements:
+        sql2 = text(state)
+        try:
+            db.session.execute(sql2)
+            db.session.commit()
+        except sqlalchemy.exc.OperationalError as e:
+            print(f"Here is the error: \n{e}")
+            print("-----------")
 
 
 if __name__ == "__main__":
