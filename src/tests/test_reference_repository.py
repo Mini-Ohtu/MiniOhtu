@@ -71,7 +71,7 @@ class ReferenceRepositoryTests(unittest.TestCase):
     def test_get_references_returns_no_results_message(self):
         self.fake_session.rows = []
         result = reference_repository.get_references()
-        self.assertEqual(result, "Ei viitteitä")
+        self.assertEqual(result, "No references")
 
     def test_get_references_handles_invalid_and_non_dict_payloads(self):
         self.fake_session.rows = [
