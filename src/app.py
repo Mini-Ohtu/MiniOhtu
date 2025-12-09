@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 from flask import redirect, render_template, request, jsonify, url_for
-from db_helper import reset_db, setup_db
+from db_helper import reset_db
 from repositories.reference_repository import (
     delete_reference,
     create_references,

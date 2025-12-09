@@ -11,13 +11,13 @@ def reset_db():
     print("Clearing contents from table bibtex_references")
     sql_references = text("DELETE FROM bibtex_references")
     db.session.execute(sql_references)
-    
+
     print("Clearing contents from table tags")
     sql_tags = text("DELETE FROM tags")
     db.session.execute(sql_tags)
 
-    print("Clearing contents from table tag_reference")
-    sql_tag_reference = text("DELETE FROM tag_reference")
+    print("Clearing contents from table tag_references")
+    sql_tag_reference = text("DELETE FROM tag_references")
     db.session.execute(sql_tag_reference)
 
     db.session.commit()
