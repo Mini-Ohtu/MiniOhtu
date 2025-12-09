@@ -27,11 +27,14 @@ Reference app
 </div>
 
 
+<div class="text-center">
 {% if tags %}
 <h2>Tags:</h2>
-<ul>
+<ul style="list-style-type: none">
   {% for tag in tags %}
-  <li><a href="/show_tag_references/{{ tag.id }}">{{ tag.tag_name }}</a></li>
+  <li style="display: inline; margin-right: 5px;">
+    <a href="/show_tag_references/{{ tag.id }}">{{ tag.tag_name }}</a>
+  </li>
   {% endfor %}
 </ul>
 {% else %}
@@ -40,7 +43,7 @@ No tags yet.
 <p>
   <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
 </p>
-
+</div>
 
 {% if references is string %}
 <div class="reference-card text-center">
