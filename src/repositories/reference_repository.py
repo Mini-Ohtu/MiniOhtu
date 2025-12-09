@@ -159,3 +159,10 @@ def get_reference_by_key(citekey):
         payload = {}
 
     return Reference(citekey, entry_type, payload)
+
+
+def citekey_exists(citekey: str) -> bool:
+    """Return True if citekey is already stored."""
+    sql = text("SELECT 1 FROM bibtex_references WHERE citekey = :citekey LIMIT 1")
+    result = db.session.execute(sql, {"citekey": citekey})
+    return result.fetchone() is not None

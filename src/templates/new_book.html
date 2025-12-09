@@ -54,10 +54,13 @@
   <p style="color: red;">{{ error_message }}</p>
   {% endif %}
 
-  <p>
-    <label for="citekey">CiteKey *</label><br>
-    <input class="form-control" type="text" name="citekey" id="citekey" value="{{ citekey_prefill or '' }}" required>
-  </p>
+  <div class="mb-3">
+    <label for="citekey" class="form-label">CiteKey *</label>
+    <div class="input-group">
+      <input class="form-control" type="text" name="citekey" id="citekey" value="{{ citekey_prefill or '' }}" required>
+      <button type="button" class="btn btn-outline-secondary" id="generate-citekey-btn">Сгенерировать новый citekey</button>
+    </div>
+  </div>
 
   <div id="fields-container"></div>
 
