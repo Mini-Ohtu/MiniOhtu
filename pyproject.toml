@@ -1,8 +1,9 @@
 [project]
-name = "miniprojekti-boilerplate"
-version = "0.1.0"
-description = ""
+name = "MiniOhtu"
+version = "1.0.0"
+description = "MiniOhtu project, created using boilerplate"
 authors = [
+    {name = "OOLALAA team",email = "oolalaa.team@helsinki.fi"},
     {name = "Matti Luukkainen",email = "mluukkai@iki.fi"}
 ]
 license = {text = "MIT"}
