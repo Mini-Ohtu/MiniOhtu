@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 from app import app as flask_app
 from entities.reference import Reference
@@ -108,3 +108,15 @@ class AppTests(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         fetch_mock.assert_called_once()
         self.assertIn(b"Watson_1953", resp.data)
+
+    def test_generate_citekey_endpoint_returns_generated_key(self):
+        payload = {"author": "John Smith", "title": "The best book", "year": "2024"}
+
+        with patch("app.generate_citekey", return_value="Smith2024tbb") as generator:
+            resp = self.client.post("/generate_citekey", json=payload)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.get_json()["citekey"], "Smith2024tbb")
+        generator.assert_called_once_with(
+            "John Smith", "2024", "The best book", ANY
+        )

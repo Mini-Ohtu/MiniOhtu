@@ -119,3 +119,9 @@ class ReferenceRepositoryTests(unittest.TestCase):
         reference = reference_repository.get_reference_by_key("ck6")
         self.assertIsInstance(reference, Reference)
         self.assertEqual(reference.data, {})
+
+    def test_citekey_exists_checks_presence(self):
+        self.fake_session.rows = [(1,)]
+        self.assertTrue(reference_repository.citekey_exists("present"))
+        self.fake_session.rows = []
+        self.assertFalse(reference_repository.citekey_exists("missing"))
