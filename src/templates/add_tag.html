@@ -3,7 +3,9 @@
 
 {% block body %}
 
+<div class="text-center mb-3">
 <h2>Add tag to ref {{ ref.citekey }}</h2>
+</div>
 
 <a href="/" class="btn btn-secondary">Back</a>
 
@@ -21,20 +23,25 @@
   </pre>
 </div>
 {% endif %}
+<div class="text-center">
 <br>
 <p>
     {% if ref_tags %}
     Tags added to reference {{ref.citekey }}:
-<ul>
+<ul style="list-style-type: none">
     {% for tag in ref_tags %}
-    <li>{{ tag.tag_name }}</li>
+     <li style="display: inline; margin-right: 5px;">
+        {{ tag.tag_name }}
+     </li>
 {% endfor %}
 </ul>
 {% endif %}
 <br>
 {% if tags_left %}
+</div>
 
 <body>
+<div class="text-center">
     <form method="POST" action="{{ url_for('adding_tag', key=ref.citekey) }}">
         <select name="tag_name">
             {% for tag in tags_left %}
@@ -49,6 +56,7 @@
         <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
     </p>
     {% endif %}
+    </div>
 </body>
 
 {% endblock %}
