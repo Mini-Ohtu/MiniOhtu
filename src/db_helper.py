@@ -17,8 +17,8 @@ def reset_db():
     sql_tags = text("DELETE FROM tags")
     db.session.execute(sql_tags)
 
-    print("Clearing contents from table tag_references")
-    sql_tag_reference = text("DELETE FROM tag_references")
+    print("Clearing contents from table tag_reference")
+    sql_tag_reference = text("DELETE FROM tag_reference")
     db.session.execute(sql_tag_reference)
 
     db.session.commit()
@@ -72,6 +72,11 @@ def setup_db():
 
     statements = schema_sql.split(";")
     for state in statements:
+
+        state = state.strip()
+        if len(state) == 0:
+            continue
+
         sql2 = text(state)
         try:
             db.session.execute(sql2)
