@@ -61,31 +61,30 @@ def setup_db():
     db.session.execute(sql)
     db.session.commit()
 
-
+# pylint: disable=C0301
 def populate_the_db():
     data = [
-        "fish1",
-        "book",
-        '{"author": "Lohi", "title": "Juttu asiaa", "year": 1006, '
-        + '"publisher": "Gold Publisher","tag": "Lukematta", "edition": "104,729"}',
+        "Tauriainen_2023",
+        "misc",
+        '{"author": "Tauriainen, Juha", "title": "Correlation of Unit Test Code Coverage with Software Quality", "year": 2023, '
+        + '"publisher": "Helsingin yliopisto"}',
     ]
     put_it_into_db(data)
 
     data = [
-        "fish2",
-        "book",
-        '{"author": "Lohi", "title": "You know, the thing about rivers?", '
-        + '"year": 1998, "publisher": "Gold Publisher","tag": "Lukematta"}',
+        "Luukkainen_2012",
+        "inproceedings",
+        '{"author": "Luukkainen, Matti and Vihavainen, Arto and Vikberg, Thomas", "title": "Three years of design-based research to reform a software engineering curriculum", "year": 2012, "publisher": "ACM",'
+        + '"series": "SIGITE ’ 12", "pages": "209-214", "edition": "666"'
+        + ', "month": "oct"}',
     ]
     put_it_into_db(data)
 
     data = [
-        "fish3",
-        "book",
-        '{"author": "Lohi", "title": "Historian havinaa, muisteluja '
-        + 'vuosien varrelta", "year": 2023, "publisher": "Penguin Publisher",'
-        + '"volume": "999999999999", "address": "joki", "edition": "666"'
-        + ', "month": "6", "tag": "Lukematta"}',
+        "Uurtimo_2023",
+        "misc",
+        '{"author": "Uurtimo, Justus", "title": "Tietojenkalastelu ja siitä ilmoittaminen suomalaisessa it-alan organisaatiossa", '
+        + '"year": 2023, "publisher": "University of Jyväskylä"}',
     ]
     put_it_into_db(data)
 
