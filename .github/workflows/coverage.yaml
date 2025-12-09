@@ -16,8 +16,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
 
+      - name: Install Poetry
+        run: pip install poetry
       - name: Install dependencies
-        run: pip install pytest pytest-cov
+        run: poetry install
+
+    #   - name: Install dependencies
+    #     run: pip install pytest pytest-cov
 
       - name: Run tests
         run: pytest --cov --cov-branch --cov-report=xml
