@@ -36,7 +36,8 @@ def _clean_token(text: str) -> str:
 def _extract_last_name(author: str) -> str:
     if not author:
         return ""
-    first_author = re.split(r"\s+and\s+", author, flags=re.IGNORECASE)[0].strip()
+    normalized = re.sub(r"\s+", " ", author).strip()
+    first_author = re.split(r"\band\b", normalized, maxsplit=1, flags=re.IGNORECASE)[0].strip()
     if "," in first_author:
         last_name = first_author.split(",", 1)[0].strip()
     else:
@@ -68,6 +69,7 @@ def _random_significant_word(title: str) -> str:
     options = _significant_words(title)
     if not options:
         return ""
+    # Pseudorandomness is fine for citekey variety (not security-sensitive).
     return random.choice(options)
 
 
