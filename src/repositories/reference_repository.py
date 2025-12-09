@@ -53,7 +53,7 @@ def get_filtered_references(args: MultiDict[str, str]) -> list:
                 search = str(getattr(result, key))
             else:
                 search = str(result)
-            string_result = re.findall(value, search)
+            string_result = re.findall(value, search, flags=re.IGNORECASE)
             if len(string_result) > 0:
                 holder.append(result)
 
