@@ -9,3 +9,6 @@ report.html
 possu.sh
 .env.test
 .coverage
+*.env
+*.db
+/src/instance/*

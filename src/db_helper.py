@@ -79,6 +79,9 @@ def setup_db():
         except sqlalchemy.exc.OperationalError as e:
             print(f"Here is the error: \n{e}")
             print("-----------")
+        except sqlalchemy.exc.ProgrammingError as e2:
+            print("You have tried to do something weird:")
+            print(e2)
 
 
 if __name__ == "__main__":
