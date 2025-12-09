@@ -53,15 +53,55 @@ def setup_db():
         schema_sql = f.read().strip()
 
     if _db_backend() == "sqlite":
-        schema_sql = (
-            schema_sql.replace(
-                "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
-            )
-            .replace("JSON NOT NULL", "TEXT NOT NULL")
-        )
+        schema_sql = schema_sql.replace(
+            "SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT"
+        ).replace("JSON NOT NULL", "TEXT NOT NULL")
 
     sql = text(schema_sql)
     db.session.execute(sql)
+    db.session.commit()
+
+# pylint: disable=C0301
+def populate_the_db():
+    data = [
+        "Tauriainen_2023",
+        "misc",
+        '{"author": "Tauriainen, Juha", "title": "Correlation of Unit Test Code Coverage with Software Quality", "year": 2023, '
+        + '"publisher": "Helsingin yliopisto"}',
+    ]
+    put_it_into_db(data)
+
+    data = [
+        "Luukkainen_2012",
+        "inproceedings",
+        '{"author": "Luukkainen, Matti and Vihavainen, Arto and Vikberg, Thomas", "title": "Three years of design-based research to reform a software engineering curriculum", "year": 2012, "publisher": "ACM",'
+        + '"series": "SIGITE ’ 12", "pages": "209-214", "edition": "666"'
+        + ', "month": "oct"}',
+    ]
+    put_it_into_db(data)
+
+    data = [
+        "Uurtimo_2023",
+        "misc",
+        '{"author": "Uurtimo, Justus", "title": "Tietojenkalastelu ja siitä ilmoittaminen suomalaisessa it-alan organisaatiossa", '
+        + '"year": 2023, "publisher": "University of Jyväskylä"}',
+    ]
+    put_it_into_db(data)
+
+
+# pylint: disable=C0301
+def put_it_into_db(data):
+    sql = text(
+        "INSERT INTO bibtex_references (citekey, entry_type, data) VALUES (:citekey, :entry_type, :data)"
+    )
+    db.session.execute(
+        sql,
+        {
+            "citekey": data[0],
+            "entry_type": data[1],
+            "data": data[2],
+        },
+    )
     db.session.commit()
 
 
