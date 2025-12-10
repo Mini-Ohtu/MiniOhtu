@@ -28,13 +28,13 @@ def test_build_base_citekey_skips_stop_words(choice_mock):
 
 @patch("citekey_service.secrets.choice", return_value="Best")
 def test_generate_citekey_appends_suffix_on_collision(choice_mock):
-    existing = {"Smith2020Best", "Smith2020Best1"}
+    existing = {"Smith2020Best", "Smith2020Best#1"}
 
     def exists_fn(key):
         return key in existing
 
     citekey = generate_citekey("John Smith", 2020, "The best book", exists_fn)
-    assert citekey == "Smith2020Best2"
+    assert citekey == "Smith2020Best#2"
     choice_mock.assert_called_once_with(["Best", "Book"])
 
 
@@ -43,4 +43,4 @@ def test_generate_citekey_falls_back_to_ref_when_missing_data():
         return key == "ref"
 
     citekey = generate_citekey("", "", "", exists_fn)
-    assert citekey == "ref1"
+    assert citekey == "ref#1"

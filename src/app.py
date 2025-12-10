@@ -8,6 +8,7 @@ from repositories.reference_repository import (
     get_reference_by_key,
     get_filtered_references,
     citekey_exists,
+    make_citekey_unique,
 )
 from config import app, test_env
 from doi_service import fetch_reference_from_doi, DoiServiceError
@@ -186,7 +187,7 @@ def citekey_generation():
     year = payload.get("year")
 
     generated = generate_citekey(author, year, title, citekey_exists)
-    return jsonify({"citekey": generated})
+    return jsonify({"citekey": make_citekey_unique(generated)})
 
 
 # testausta varten oleva reitti
