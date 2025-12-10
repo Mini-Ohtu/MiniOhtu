@@ -22,7 +22,6 @@ After creating a tag it shows up
     Input Text  tag_name  unread
     Click Save Button
     Wait Until Page Contains  unread
-    Click Link  Back
     Go To  ${HOME_URL}
     Wait Until Page Contains  unread
     Page Should Contain  unread
@@ -58,7 +57,6 @@ Adding tag to reference when tag added shows tag as an option
     Input Text  tag_name  unread
     Click Save Button
     Wait Until Page Contains  unread
-    Click Link  Back
     Go To  ${HOME_URL}
     Wait Until Page Contains  unread
     Go To  ${HOME_URL}
