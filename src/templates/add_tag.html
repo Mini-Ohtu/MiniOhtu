@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="text-center mb-3">
+    <h2>Add tags to reference {{ ref.citekey }}</h2>
+</div>
+
+<div class="text-center mb-3">
+    <a href="/" class="btn btn-secondary">Back</a>
+</div>
+
+
+{% if ref %}
+<div class="reference-card">
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">{{ ref.citekey }}</h3>
+    </div>
+    <pre>
+  @{{ ref.entry_type }}{ {{ ref.citekey }},
+{% for field, value in ref.data.items() %}
+    {{ field }} = { {{ value }} }{% if not loop.last %},{% endif %}
+{% endfor %}
+  }
+  </pre>
+</div>
+{% endif %}
+<br>
+
+<div class="reference-card">
+    {% if ref_tags %}
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">Tags added to reference {{ref.citekey }}:</h3>
+    </div>
+    {% for tag in ref_tags %}
+    <pre>
+    {{ tag.tag_name }}
+  </pre>
+    {% endfor %}
+    {% else %}
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">No tags added to reference {{ref.citekey }}.</h3>
+    </div>
+    {% endif %}
+</div>
+
+<div class="reference-card">
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        {% if tags_left %}
+        <h3 class="mt-2 flex-grow-1">Choose tag:</h3>
+    </div>
+
+    <form method="POST" action="{{ url_for('adding_tag_to_reference', key=ref.citekey) }}">
+        <select name="tag_name">
+            {% for tag in tags_left %}
+            <option value="{{ tag.tag_name }}">{{tag.tag_name}}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-success me-2" type="submit">Save</button>
+    </form>
+
+</div>
+{% else %}
+<div class="d-flex gap-2 justify-content-between mb-2">
+    <h3 class="mt-2 flex-grow-1">No tags to add</h3>
+    {% endif %}
+
+</div>
+</div>
+
+<div class="text-center mb-3">
+    <a href="{{ url_for('add_tag_only') }}" class="btn btn-primary">Create a new tag</a>
+</div>
+<div class="text-center mb-3">
+    <a href="/" class="btn btn-secondary">Back</a>
+</div>
+
+{% endblock %}

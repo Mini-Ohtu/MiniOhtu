@@ -9,8 +9,17 @@ def _db_backend():
 
 def reset_db():
     print("Clearing contents from table bibtex_references")
-    sql = text("DELETE FROM bibtex_references")
-    db.session.execute(sql)
+    sql_references = text("DELETE FROM bibtex_references")
+    db.session.execute(sql_references)
+
+    print("Clearing contents from table tags")
+    sql_tags = text("DELETE FROM tags")
+    db.session.execute(sql_tags)
+
+    print("Clearing contents from table tag_references")
+    sql_tag_reference = text("DELETE FROM tag_references")
+    db.session.execute(sql_tag_reference)
+
     db.session.commit()
 
 
@@ -41,7 +50,7 @@ def setup_db():
     if len(tables_in_db) > 0:
         print(f"Tables exist, dropping: {', '.join(tables_in_db)}")
         for table in tables_in_db:
-            sql = text(f"DROP TABLE {table}")
+            sql = text(f"DROP TABLE {table} CASCADE")
             db.session.execute(sql)
         db.session.commit()
 

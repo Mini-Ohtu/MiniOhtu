@@ -7,7 +7,7 @@ Reference app
 {% block body %}
 
 <div class="text-center mb-3">
-<h2>Reference App</h2>
+  <h2>Reference App</h2>
 </div>
 
 <div class="d-flex justify-content-center mb-3">
@@ -16,14 +16,8 @@ Reference app
 
 <div class="mb-3 d-flex gap-2 justify-content-center">
   <form method="get" class="d-flex gap-2">
-    <input
-      type="text"
-      name="ref"
-      placeholder="Search references"
-      class="form-control"
-      value="{{ request.args.get('ref', '') }}"
-      style="max-width: 300px;"
-    />
+    <input type="text" name="ref" placeholder="Search references" class="form-control"
+      value="{{ request.args.get('ref', '') }}" style="max-width: 300px;" />
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
@@ -33,19 +27,21 @@ Reference app
 </div>
 
 {% if references is string %}
-  <div class="reference-card text-center">
-    <h5 class="mt-2">{{ references }}</h5>
-  </div>
+<div class="reference-card text-center">
+  <h5 class="mt-2">{{ references }}</h5>
+</div>
 
 {% else %}
 {% for ref in references %}
 <div class="reference-card">
-   <div class="d-flex gap-2 justify-content-between mb-2">
+  <div class="d-flex gap-2 justify-content-between mb-2">
     <h3 class="mt-2 flex-grow-1">{{ ref.citekey }}</h3>
-    <form method="POST" action="/delete_reference/{{ ref.citekey }}" onsubmit="return confirm('Are you sure you want to delete this reference?');">
+    <form method="POST" action="/delete_reference/{{ ref.citekey }}"
+      onsubmit="return confirm('Are you sure you want to delete this reference?');">
       <button class="mt-2 btn btn-danger" type="submit">Delete</button>
     </form>
-      <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+    <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+    <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/add_tag/{{ ref.citekey }}'">Add tags</button>
   </div>
   <pre>
   @{{ ref.entry_type }}{ {{ ref.citekey }},
@@ -57,4 +53,24 @@ Reference app
 </div>
 {% endfor %}
 {% endif %}
+
+
+{% if tags %}
+<div class="reference-card">
+  <div class="d-flex gap-2 justify-content-between mb-2">
+    <h3 class="mt-2 flex-grow-1">Tags:</h3>
+  </div>
+  <pre>
+{% for tag in tags %}
+    <a href="/show_tag_references/{{ tag.id }}">{{ tag.tag_name }}</a>
+{% endfor %}
+  </pre>
+</div>
+{% else %}
+<div class="reference-card text-center">
+  <h5 class="mt-2">No tags</h5>
+</div>
+{% endif %}
+
+<button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/new_tag'">Create a new tag</button>
 {% endblock %}

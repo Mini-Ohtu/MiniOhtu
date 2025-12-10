@@ -11,12 +11,11 @@ BIBTEX_FIELDS = {
             "note",
             "key",
             "url",
-            "tag",
         ],
     ],
     "article": [
         ["author", "title", "journal", "year"],
-        ["volume", "number", "pages", "month", "doi", "note", "key", "tag"],
+        ["volume", "number", "pages", "month", "doi", "note", "key"],
     ],
     "booklet": [
         ["title"],
@@ -28,7 +27,6 @@ BIBTEX_FIELDS = {
             "year",
             "note",
             "key",
-            "tag",
         ],
     ],
     "conference": [
@@ -45,7 +43,6 @@ BIBTEX_FIELDS = {
             "publisher",
             "note",
             "key",
-            "tag",
         ],
     ],
     "inbook": [
@@ -60,7 +57,6 @@ BIBTEX_FIELDS = {
             "month",
             "note",
             "key",
-            "tag",
         ],
     ],
     "incollection": [
@@ -78,7 +74,6 @@ BIBTEX_FIELDS = {
             "month",
             "note",
             "key",
-            "tag",
         ],
     ],
     "inproceedings": [
@@ -95,7 +90,6 @@ BIBTEX_FIELDS = {
             "publisher",
             "note",
             "key",
-            "tag",
         ],
     ],
     "manual": [
@@ -109,20 +103,19 @@ BIBTEX_FIELDS = {
             "year",
             "note",
             "key",
-            "tag",
         ],
     ],
     "mastersthesis": [
         ["author", "title", "school", "year"],
-        ["type", "address", "month", "note", "key", "tag"],
+        ["type", "address", "month", "note", "key"],
     ],
     "misc": [
         [],
-        ["author", "title", "howpublished", "month", "year", "note", "key", "tag"],
+        ["author", "title", "howpublished", "month", "year", "note", "key"],
     ],
     "phdthesis": [
         ["author", "title", "school", "year"],
-        ["type", "address", "month", "note", "key", "tag"],
+        ["type", "address", "month", "note", "key"],
     ],
     "proceedings": [
         ["title", "year"],
@@ -136,16 +129,15 @@ BIBTEX_FIELDS = {
             "publisher",
             "organization",
             "note",
-            "key",
-            "tag",
+            "key"
         ],
     ],
     "techreport": [
         ["author", "title", "institution", "year"],
-        ["type", "number", "address", "month", "note", "key", "tag"],
+        ["type", "number", "address", "month", "note", "key"],
     ],
     "unpublished": [
         ["author", "title", "note"],
-        ["month", "year", "key", "tag"],
+        ["month", "year", "key"],
     ],
 }

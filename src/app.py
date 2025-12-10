@@ -9,6 +9,13 @@ from repositories.reference_repository import (
     get_filtered_references,
     citekey_exists,
     make_citekey_unique,
+    get_all_tags,
+    get_reference_id,
+    get_tags_by_reference,
+    get_tags_not_in_reference,
+    get_tag_by_id,
+    create_tag,
+    add_tag_to_reference
 )
 from config import app, test_env
 from doi_service import fetch_reference_from_doi, DoiServiceError
@@ -16,6 +23,7 @@ from util import (
     validate_reference_title,
     validate_reference_year,
     UserInputError,
+    validate_tag
 )
 from bibtex_fields import BIBTEX_FIELDS
 from citekey_service import generate_citekey
@@ -44,7 +52,8 @@ def _read_field(name, required):
 @app.route("/")
 def index():
     references: list = get_filtered_references(request.args)
-    return render_template("index.html", references=references)
+    tags = get_all_tags()
+    return render_template("index.html", references=references, tags=tags)
 
 
 def _fetch_doi_prefill(doi_param):
@@ -172,11 +181,52 @@ def edit_reference(key):
             field_map=BIBTEX_FIELDS,
         )
 
-
 @app.route("/delete_reference/<key>", methods=["POST"])
 def reference_deletion(key):
     delete_reference(key)
     return redirect("/")
+
+@app.route("/add_tag/<key>", methods=["GET"])
+def adding_tag(key):
+    ref = get_reference_by_key(key)
+    reference_id = get_reference_id(key)
+    ref_tags = get_tags_by_reference(reference_id)
+    tags_left = get_tags_not_in_reference(reference_id)
+    return render_template("add_tag.html", ref=ref, ref_tags=ref_tags, tags_left=tags_left)
+
+@app.route("/add_tag_to_reference/<key>", methods=["POST"])
+def adding_tag_to_reference(key):
+    ref = get_reference_by_key(key)
+    reference_id = get_reference_id(key)
+    tag_name = request.form["tag_name"]
+    tag_id=create_tag(tag_name)
+    add_tag_to_reference(tag_id, reference_id)
+    ref_tags = get_tags_by_reference(reference_id)
+    tags_left = get_tags_not_in_reference(reference_id)
+    return render_template("add_tag.html", ref=ref, ref_tags=ref_tags, tags_left=tags_left)
+
+@app.route("/new_tag", methods=["GET"])
+def add_tag_only():
+    tags = get_all_tags()
+    return render_template("new_tag.html", tags=tags)
+
+@app.route("/create_new_tag", methods=["POST"])
+def creating_tag():
+    tag_name = request.form["tag_name"]
+    try:
+        validate_tag(tag_name)
+        create_tag(tag_name)
+        return redirect(url_for("add_tag_only"))
+    # pylint: disable=W0703
+    except UserInputError as error:
+        query = urlencode({"error": str(error)})
+        return redirect(f"{url_for('add_tag_only')}?{query}")
+
+@app.route("/show_tag_references/<tag_id>", methods=["GET", "POST"])
+def show_tag_references(tag_id):
+    tag = get_tag_by_id(tag_id)
+    references: list = get_filtered_references(request.args, tag_id)
+    return render_template("tags_references.html", references=references, tag=tag)
 
 
 @app.route("/generate_citekey", methods=["POST"])
