@@ -31,8 +31,9 @@ def validate_reference_year(year, required=True):
 
 
 def validate_tag(tag_name):
-    if len(tag_name) == 0:
+    cleaned_title = (tag_name or "").strip()
+    if len(cleaned_title) == 0:
         raise UserInputError("Tag length can't be 0")
 
-    if len(tag_name) > 20:
-        raise UserInputError("Tag length must be smaller than 1000")
+    if len(cleaned_title) > 100:
+        raise UserInputError("Tag length must be smaller than 100")

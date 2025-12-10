@@ -45,7 +45,8 @@ class TestRerence(unittest.TestCase):
             validate_tag("")
 
         with self.assertRaises(UserInputError):
-            validate_tag("aa" * 20)
+            validate_tag("aa" * 100)
 
     def test_valid_tag_does_not_raise_error(self):
-        validate_reference_title("tag-1")
+        validate_tag("tag-1")
+        validate_tag("a" * 100)

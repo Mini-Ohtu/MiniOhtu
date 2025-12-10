@@ -12,10 +12,13 @@ ${PUBLISHER}     Test Publisher
 ${TAG_NAME_TO_SELECT}    unread
 
 *** Test Cases ***
-
-Test Create New Tag
+Empty tag list is shown when no tags added
     Go To  ${HOME_URL}
-    Click Link  Create a new tag
+    Page Should Contain  No tags
+
+After creating a tag it shows up
+    Go To  ${HOME_URL}
+    Click Button  Create a new tag
     Input Text  tag_name  unread
     Click Save Button
     Wait Until Page Contains  unread
@@ -23,8 +26,6 @@ Test Create New Tag
     Go To  ${HOME_URL}
     Wait Until Page Contains  unread
     Page Should Contain  unread
-    #Should Contain  ${OUTPUT}    unread
-
 
 Adding tag to reference when no tags added shows empty tag list
     Go To  ${HOME_URL}
@@ -40,7 +41,7 @@ Adding tag to reference when no tags added shows empty tag list
     Page Should Contain  book-test-2
     Click Button  Add tags
     Wait Until Page Contains  book-test-2
-    Page Should Contain  No tags to add.
+    Page Should Contain  No tags to add
 
 Adding tag to reference when tag added shows tag as an option
     Go To  ${HOME_URL}
@@ -53,7 +54,7 @@ Adding tag to reference when tag added shows tag as an option
     Click Save Button
     Wait Until Page Contains  Reference added
     Go To  ${HOME_URL}
-    Click Link  Create a new tag
+    Click Button  Create a new tag
     Input Text  tag_name  unread
     Click Save Button
     Wait Until Page Contains  unread
@@ -65,7 +66,7 @@ Adding tag to reference when tag added shows tag as an option
     Wait Until Page Contains  book-test-2
     Page Should Contain  unread
 
-Adding tag to reference
+After adding tag to reference it shows up in reference
     Go To  ${HOME_URL}
     Click Link  Create new reference
     Input Text  citekey  book-test-2
@@ -76,11 +77,10 @@ Adding tag to reference
     Click Save Button
     Wait Until Page Contains  Reference added
     Go To  ${HOME_URL}
-    Click Link  Create a new tag
+    Click Button  Create a new tag
     Input Text  tag_name  unread
     Click Save Button
     Wait Until Page Contains  unread
-    Click Link  Back
     Go To  ${HOME_URL}
     Wait Until Page Contains  unread
     Go To  ${HOME_URL}
@@ -90,3 +90,42 @@ Adding tag to reference
     Click Save Button
     Wait Until Page Contains  Tags added to reference book-test-2:
     Page Should Contain  unread
+
+After adding tag to reference it shows up in tag
+    Go To  ${HOME_URL}
+    Click Link  Create new reference
+    Input Text  citekey  book-test-2
+    Input Text  author  Test Author
+    Input Text  title  Test Title
+    Input Text  year  2024
+    Input Text  publisher  Test Publisher
+    Click Save Button
+    Wait Until Page Contains  Reference added
+    Go To  ${HOME_URL}
+    Click Button  Create a new tag
+    Input Text  tag_name  unread
+    Click Save Button
+    Wait Until Page Contains  unread
+    Go To  ${HOME_URL}
+    Wait Until Page Contains  unread
+    Go To  ${HOME_URL}
+    Click Button  Add tags
+    Wait Until Page Contains  book-test-2
+    Select From List By Value    xpath=//select[@name='tag_name']    ${TAG_NAME_TO_SELECT}
+    Click Save Button
+    Wait Until Page Contains  Tags added to reference book-test-2:
+    Go To  ${HOME_URL}
+    Click Link  unread
+    Page Should Contain  book-test-2
+
+Clicking tag does not show references before adding
+    Go To  ${HOME_URL}
+    Click Button  Create a new tag
+    Input Text  tag_name  unread
+    Click Save Button
+    Wait Until Page Contains  unread
+    Go To  ${HOME_URL}
+    Wait Until Page Contains  unread
+    Go To  ${HOME_URL}
+    Click Link  unread
+    Page Should Contain  No references with tag
