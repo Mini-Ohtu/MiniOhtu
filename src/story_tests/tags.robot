@@ -128,4 +128,4 @@ Clicking tag does not show references before adding
     Wait Until Page Contains  unread
     Go To  ${HOME_URL}
     Click Link  unread
-    Page Should Contain  No references with tag
+    Page Should Contain  No references
