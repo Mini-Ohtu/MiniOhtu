@@ -58,4 +58,42 @@ function setupDynamicFields() {
   renderFields(initial || "book");
 }
 
-document.addEventListener("DOMContentLoaded", setupDynamicFields);
+function setupCitekeyGenerator() {
+  const button = document.getElementById("generate-citekey-btn");
+  if (!button) return;
+
+  const citekeyInput = document.getElementById("citekey");
+  const readField = (id) => {
+    const node = document.getElementById(id);
+    return node ? node.value : "";
+  };
+
+  button.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const payload = {
+      author: readField("author"),
+      title: readField("title"),
+      year: readField("year"),
+    };
+
+    try {
+      const response = await fetch("/generate_citekey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("Failed to generate citekey");
+      const data = await response.json();
+      if (data.citekey && citekeyInput) {
+        citekeyInput.value = data.citekey;
+      }
+    } catch (err) {
+      console.error("Citekey generation failed", err);
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupDynamicFields();
+  setupCitekeyGenerator();
+});
