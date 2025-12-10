@@ -1,5 +1,6 @@
 import json
 import unittest
+from unittest.mock import patch
 from types import SimpleNamespace
 
 from repositories import reference_repository
@@ -83,6 +84,21 @@ class ReferenceRepositoryTests(unittest.TestCase):
         self.assertEqual(references[0].data, {})
         self.assertEqual(references[1].data, {})
 
+    def test_make_citekey_unique_returns_original_when_free(self):
+        with patch(
+            "repositories.reference_repository.citekey_exists", return_value=False
+        ):
+            value = reference_repository.make_citekey_unique("ck-new")
+        self.assertEqual(value, "ck-new")
+
+    def test_make_citekey_unique_appends_suffix_when_taken(self):
+        with patch(
+            "repositories.reference_repository.citekey_exists",
+            side_effect=[True, False],
+        ):
+            value = reference_repository.make_citekey_unique("ck")
+        self.assertEqual(value, "ck#1")
+
     def test_create_references_cleans_and_commits(self):
         reference_repository.create_references(
             "ck3",
@@ -93,6 +109,18 @@ class ReferenceRepositoryTests(unittest.TestCase):
         self.assertEqual(sent, {"author": "Name", "year": 2020})
         self.assertIn("INSERT INTO bibtex_references", str(self.fake_session.last_sql))
         self.assertTrue(self.fake_session.committed)
+
+    def test_create_references_uses_unique_citekey(self):
+        with patch(
+            "repositories.reference_repository.make_citekey_unique",
+            return_value="ck3#1",
+        ):
+            reference_repository.create_references(
+                "ck3",
+                "article",
+                {"author": "Name"},
+            )
+        self.assertEqual(self.fake_session.last_params["citekey"], "ck3#1")
 
     def test_delete_reference_executes_delete(self):
         reference_repository.delete_reference("ck4")

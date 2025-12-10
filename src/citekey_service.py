@@ -97,6 +97,6 @@ def generate_citekey(
     candidate = base
     counter = 1
     while exists_fn(candidate):
-        candidate = f"{base}{counter}"
+        candidate = f"{base}#{counter}"
         counter += 1
     return candidate
