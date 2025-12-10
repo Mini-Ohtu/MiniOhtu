@@ -65,7 +65,15 @@ def get_filtered_references(args: MultiDict[str, str]) -> list:
     return result_list
 
 
-# pylint: disable=C0301
+def make_citekey_unique(citekey: str) -> str:
+    candidate = citekey
+    suffix = 1
+    while citekey_exists(candidate):
+        candidate = f"{citekey}#{suffix}"
+        suffix += 1
+    return candidate
+
+
 def create_references(citekey, entry_type, data):
     """Viitteiden luominen tietokantaan"""
     cleaned_data = {}
@@ -79,13 +87,15 @@ def create_references(citekey, entry_type, data):
             cleaned_data[key] = trimmed
         else:
             cleaned_data[key] = value
+    citekey_to_store = make_citekey_unique(citekey)
     sql = text(
-        "INSERT INTO bibtex_references (citekey, entry_type, data) VALUES (:citekey, :entry_type, :data)"
+        "INSERT INTO bibtex_references (citekey, entry_type, data) "
+        "VALUES (:citekey, :entry_type, :data)"
     )
     db.session.execute(
         sql,
         {
-            "citekey": citekey,
+            "citekey": citekey_to_store,
             "entry_type": entry_type,
             "data": json.dumps(cleaned_data),
         },
@@ -159,3 +169,10 @@ def get_reference_by_key(citekey):
         payload = {}
 
     return Reference(citekey, entry_type, payload)
+
+
+def citekey_exists(citekey: str) -> bool:
+    """Return True if citekey is already stored."""
+    sql = text("SELECT 1 FROM bibtex_references WHERE citekey = :citekey LIMIT 1")
+    result = db.session.execute(sql, {"citekey": citekey})
+    return result.fetchone() is not None
