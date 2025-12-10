@@ -15,7 +15,7 @@ def get_references() -> list:
     references = result.fetchall()
 
     if not references:
-        return "Ei viitteitä"
+        return "No references"
 
     parsed_references = []
     for citekey, entry_type, data in references:
@@ -60,7 +60,7 @@ def get_filtered_references(args: MultiDict[str, str]) -> list:
         result_list = holder
 
     if len(result_list) < 1:
-        return "Ei viitteitä haussa/filterillä."
+        return "No references found with the given search/filter"
 
     return result_list
 

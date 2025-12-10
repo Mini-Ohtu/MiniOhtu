@@ -1,4 +1,5 @@
 import re
+from os import getenv
 from typing import Dict, Tuple
 
 import requests
@@ -6,6 +7,16 @@ import requests
 DOI_BASE_URL = "https://doi.org/"
 ACCEPT_HEADER = "application/x-bibtex"
 HEADER_RE = re.compile(r"@\s*([A-Za-z0-9_]+)\s*{\s*([^,\s]+)\s*,", re.DOTALL)
+TEST_DOI_BIBTEX = """@article{Robot_Doi_2024,
+  title={Robot DOI Article},
+  author={Robo Tester},
+  journal={Automation Letters},
+  year={2024},
+  volume={42},
+  pages={1--5}
+}
+"""
+TEST_ENV = getenv("TEST_ENV") == "true"
 
 
 class DoiServiceError(Exception):
@@ -27,6 +38,8 @@ def _normalize_doi(doi: str) -> str:
 def fetch_bibtex(doi: str) -> str:
     """Fetch a single BibTeX entry from the DOI service."""
     normalized = _normalize_doi(doi)
+    if TEST_ENV and normalized.startswith("robot-doi"):
+        return TEST_DOI_BIBTEX
     url = f"{DOI_BASE_URL}{normalized}"
     response = requests.get(url, headers={"Accept": ACCEPT_HEADER}, timeout=10)
     if response.status_code >= 400:
