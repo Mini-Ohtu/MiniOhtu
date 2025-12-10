@@ -89,7 +89,8 @@ def create_references(citekey, entry_type, data):
             cleaned_data[key] = value
     citekey_to_store = make_citekey_unique(citekey)
     sql = text(
-        "INSERT INTO bibtex_references (citekey, entry_type, data) VALUES (:citekey, :entry_type, :data)"
+        "INSERT INTO bibtex_references (citekey, entry_type, data) "
+        "VALUES (:citekey, :entry_type, :data)"
     )
     db.session.execute(
         sql,
