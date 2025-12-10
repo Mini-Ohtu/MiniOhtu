@@ -26,22 +26,6 @@ Reference app
   </form>
 </div>
 
-
-{% if tags %}
-<h2>Tags:</h2>
-<ul>
-  {% for tag in tags %}
-  <li><a href="/show_tag_references/{{ tag.id }}">{{ tag.tag_name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-No tags yet.
-{% endif %}
-<p>
-  <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
-</p>
-
-
 {% if references is string %}
 <div class="reference-card text-center">
   <h5 class="mt-2">{{ references }}</h5>
@@ -69,4 +53,24 @@ No tags yet.
 </div>
 {% endfor %}
 {% endif %}
+
+
+{% if tags %}
+<div class="reference-card">
+  <div class="d-flex gap-2 justify-content-between mb-2">
+    <h3 class="mt-2 flex-grow-1">Tags:</h3>
+  </div>
+  <pre>
+{% for tag in tags %}
+    <a href="/show_tag_references/{{ tag.id }}">{{ tag.tag_name }}</a>
+{% endfor %}
+  </pre>
+</div>
+{% else %}
+<div class="reference-card text-center">
+  <h5 class="mt-2">No tags</h5>
+</div>
+{% endif %}
+
+<button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/new_tag'">Create a new tag</button>
 {% endblock %}

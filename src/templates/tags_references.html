@@ -2,9 +2,13 @@
 
 {% block body %}
 
-{% if not references%}
-<h2>No references with tag {{ tag.tag_name }}</h2>
-<a href="/" class="btn btn-secondary">Back</a>
+{% if references is string %}
+<div class="reference-card text-center">
+    <h5 class="mt-2">No references with tag {{ tag.tag_name }}</h5>
+</div>
+<div class="d-flex justify-content-between mb-">
+    <a href="/" class="btn btn-secondary">Back</a>
+</div>
 
 {% else %}
 

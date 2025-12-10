@@ -15,7 +15,7 @@ def get_references() -> list:
     references = result.fetchall()
 
     if not references:
-        return "Ei viitteitä"
+        return "No references"
 
     parsed_references = []
     for citekey, entry_type, data in references:
@@ -310,7 +310,7 @@ def get_references_with_tag(tag_id) -> list:
     references = result.fetchall()
 
     if not references:
-        return "Ei viitteitä"
+        return "No references"
 
     parsed_references = []
     for citekey, entry_type, data in references:

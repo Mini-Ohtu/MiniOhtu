@@ -1,11 +1,15 @@
 {% extends "layout.html" %}
 
-
 {% block body %}
 
-<h2>Add tag to ref {{ ref.citekey }}</h2>
+<div class="text-center mb-3">
+    <h2>Add tags to reference {{ ref.citekey }}</h2>
+</div>
 
-<a href="/" class="btn btn-secondary">Back</a>
+<div class="text-center mb-3">
+    <a href="/" class="btn btn-secondary">Back</a>
+</div>
+
 
 {% if ref %}
 <div class="reference-card">
@@ -22,20 +26,31 @@
 </div>
 {% endif %}
 <br>
-<p>
-    {% if ref_tags %}
-    Tags added to reference {{ref.citekey }}:
-<ul>
-    {% for tag in ref_tags %}
-    <li>{{ tag.tag_name }}</li>
-{% endfor %}
-</ul>
-{% endif %}
-<br>
-{% if tags_left %}
 
-<body>
-    <form method="POST" action="{{ url_for('adding_tag', key=ref.citekey) }}">
+<div class="reference-card">
+    {% if ref_tags %}
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">Tags added to reference {{ref.citekey }}:</h3>
+    </div>
+    {% for tag in ref_tags %}
+    <pre>
+    {{ tag.tag_name }}
+  </pre>
+    {% endfor %}
+    {% else %}
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        <h3 class="mt-2 flex-grow-1">No tags added to reference {{ref.citekey }}.</h3>
+    </div>
+    {% endif %}
+</div>
+
+<div class="reference-card">
+    <div class="d-flex gap-2 justify-content-between mb-2">
+        {% if tags_left %}
+        <h3 class="mt-2 flex-grow-1">Choose tag:</h3>
+    </div>
+
+    <form method="POST" action="{{ url_for('adding_tag_to_reference', key=ref.citekey) }}">
         <select name="tag_name">
             {% for tag in tags_left %}
             <option value="{{ tag.tag_name }}">{{tag.tag_name}}</option>
@@ -43,12 +58,21 @@
         </select>
         <button class="btn btn-success me-2" type="submit">Save</button>
     </form>
-    {% else %}
-    No tags to add.
-    <p>
-        <a href="{{ url_for('add_tag_only') }}">Create a new tag</a>
-    </p>
+
+</div>
+{% else %}
+<div class="d-flex gap-2 justify-content-between mb-2">
+    <h3 class="mt-2 flex-grow-1">No tags to add</h3>
     {% endif %}
-</body>
+
+</div>
+</div>
+
+<div class="text-center mb-3">
+    <a href="{{ url_for('add_tag_only') }}" class="btn btn-primary">Create a new tag</a>
+</div>
+<div class="text-center mb-3">
+    <a href="/" class="btn btn-secondary">Back</a>
+</div>
 
 {% endblock %}
