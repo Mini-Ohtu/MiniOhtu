@@ -25,9 +25,7 @@ Reference app
     <button type="submit" class="btn btn-secondary">Show all</button>
   </form>
 
-  <form method="get">
-    <button type="button" class="btn btn-secondary" onclick="copy()">Copy all</button>
-  </form>
+  <button type="button" class="btn btn-secondary" onclick="copy()">Copy all</button>
 </div>
 
 {% if references is string %}
@@ -45,6 +43,7 @@ Reference app
       <button class="mt-2 btn btn-danger" type="submit">Delete</button>
     </form>
     <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
+    <button class="mt-2 mb-1 btn btn-primary" onclick="copy('ref-{{ ref.citekey }}')">Copy</button>
   </div>
   <pre id="ref-{{ ref.citekey }}">
   @{{ ref.entry_type }}{ {{ ref.citekey }},
