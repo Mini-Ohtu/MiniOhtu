@@ -28,9 +28,10 @@
       }
 
       let result = ""
-      for (let i = 0; i < elements.length; i++) {
-        result += elements[i].innerText + "\n"
+      for (let value of elements) {
+        result += value.innerText + "\n"
       }
+
       navigator.clipboard.writeText(result);
     }
 
