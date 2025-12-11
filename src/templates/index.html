@@ -24,6 +24,8 @@ Reference app
   <form method="get">
     <button type="submit" class="btn btn-secondary">Show all</button>
   </form>
+
+  <button type="button" class="btn btn-secondary" onclick="copy()">Copy all</button>
 </div>
 
 
@@ -61,8 +63,9 @@ No tags yet.
     </form>
     <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/edit_reference/{{ ref.citekey }}'">Edit</button>
     <button class="mt-2 mb-1 btn btn-primary" onclick="location.href='/add_tag/{{ ref.citekey }}'">Add tags</button>
+    <button class="mt-2 mb-1 btn btn-primary" onclick="copy('ref-{{ ref.citekey }}')">Copy</button>
   </div>
-  <pre>
+  <pre id="ref-{{ ref.citekey }}">
   @{{ ref.entry_type }}{ {{ ref.citekey }},
 {% for field, value in ref.data.items() %}
     {{ field }} = { {{ value }} }{% if not loop.last %},{% endif %}

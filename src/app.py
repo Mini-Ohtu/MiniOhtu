@@ -14,6 +14,8 @@ from repositories.reference_repository import (
     get_tag_by_id,
     create_tag,
     add_tag_to_reference
+    citekey_exists,
+    make_citekey_unique,
 )
 from config import app, test_env
 from doi_service import fetch_reference_from_doi, DoiServiceError
@@ -24,6 +26,7 @@ from util import (
     validate_tag
 )
 from bibtex_fields import BIBTEX_FIELDS
+from citekey_service import generate_citekey
 
 
 def _require_field(value, label):
@@ -224,6 +227,17 @@ def show_tag_references(tag_id):
     tag = get_tag_by_id(tag_id)
     references: list = get_filtered_references(request.args, tag_id)
     return render_template("tags_references.html", references=references, tag=tag)
+
+
+@app.route("/generate_citekey", methods=["POST"])
+def citekey_generation():
+    payload = request.get_json(silent=True) or {}
+    author = payload.get("author") or ""
+    title = payload.get("title") or ""
+    year = payload.get("year")
+
+    generated = generate_citekey(author, year, title, citekey_exists)
+    return jsonify({"citekey": make_citekey_unique(generated)})
 
 
 @app.route("/populate")
