@@ -204,7 +204,10 @@ def create_tag(tag_name):
 
 def add_tag_to_reference(tag_id, reference_id):
     """Lisää tagin viitteeseen, jollei sitä ole jo lisätty."""
-    sql = text("SELECT 1 FROM tag_references WHERE tag_id = :tag_id AND reference_id = :reference_id")
+    sql = text("""
+        SELECT 1 FROM tag_references
+        WHERE tag_id = :tag_id AND reference_id = :reference_id
+    """)
     result = db.session.execute(
         sql,
         {
