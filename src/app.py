@@ -13,7 +13,7 @@ from repositories.reference_repository import (
     get_tags_not_in_reference,
     get_tag_by_id,
     create_tag,
-    add_tag_to_reference
+    add_tag_to_reference,
     citekey_exists,
     make_citekey_unique,
 )
