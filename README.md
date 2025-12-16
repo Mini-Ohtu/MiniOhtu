@@ -8,6 +8,10 @@
 
  [Backlog](https://docs.google.com/spreadsheets/d/1Gf4uw0c0myjrpMIgQNJ6P5u_mz90s6L_LBdPb7gv93k/edit?usp=sharing)
 
+### Loppuraportti
+
+[Linkki](https://docs.google.com/document/d/16MRGGpijKl_XNYhEewECaseTKfYVZGkts9D_hq28dMM/edit?usp=sharing)
+
 ### Definition of done
 
 - User story täyttää siille määritellyt hyväksymiskriteerit.
@@ -17,7 +21,6 @@
     - luokat, muuttujat ja metodit on nimetty selkeästi.
     - sovelluksen arkkitehtuuri on järkevä.
     - koodityyli on yhtenäinen (valvotaan Pylintin avulla).
-
 
 ### Asennus- ja käyttöohjeet
 1. Kloonaa repositorio
